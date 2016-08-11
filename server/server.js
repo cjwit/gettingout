@@ -53,6 +53,7 @@ app.get('/yelp/:location', function(req, res) {
 			console.log(" -- ", listing.name);
 			listings.push({
 				name: listing.name,
+				id: listing.id,
 				url: listing.url,
 				image: listing.image_url,
 				address: listing.location.address,

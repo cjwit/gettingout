@@ -1,22 +1,17 @@
 import { combineReducers } from 'redux'
-import { REQUEST_LISTINGS, RECEIVE_LISTINGS, INVALIDATE_LISTINGS } from '../actions'
+import { REQUEST_LISTINGS, RECEIVE_LISTINGS, INVALIDATE_LISTINGS, CHANGE_LOCATION } from '../actions'
 
-/* LOGIN logic here
-function selectedSubreddit(state = 'frontend', action) {
-	switch (action.type) {
-		case 'SELECT_SUBREDDIT':
-			return action.subreddit
-		default:
-			return state
+const initialState = {
+	location: 'Rochester, NY',
+	listings: {
+		isFetching: false,
+		didInvalidate: false,
+		lastUpdated: Date.now(),
+		items: []
 	}
 }
-*/
 
-function listings(state = {
-	isFetching: false,
-	didInvalidate: false,
-	items: []
-}, action) {
+function listingSegment(state, action) {
 	switch (action.type) {
 		case INVALIDATE_LISTINGS:
 			return Object.assign({}, state, { didInvalidate: true })
@@ -26,7 +21,6 @@ function listings(state = {
 			return Object.assign({}, state, {
 				isFetching: false,
 				didInvalidate: false,
-				location: action.location,
 				items: action.listings,
 				lastUpdated: action.receivedAt })
 		default:
@@ -34,21 +28,22 @@ function listings(state = {
 	}
 }
 
-function listingsFromYelp(state = {}, action) {
+function reducer(state = initialState, action) {
 	switch (action.type) {
 		case INVALIDATE_LISTINGS:
 		case REQUEST_LISTINGS:
 		case RECEIVE_LISTINGS:
 			return Object.assign({}, state, {
-				listings: listings(state.listings, action)
+				listings: listingSegment(state.listings, action)
+			})
+		case CHANGE_LOCATION:
+			console.log('from reducer, location:', action.location)
+			return Object.assign({}, state, {
+				location: action.location
 			})
 		default:
 			return state
 	}
 }
 
-const rootReducer = combineReducers({
-	listingsFromYelp
-})
-
-export default rootReducer
+export default reducer

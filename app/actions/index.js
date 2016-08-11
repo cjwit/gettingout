@@ -3,6 +3,14 @@ import fetch from 'isomorphic-fetch'
 export const REQUEST_LISTINGS = 'REQUEST_LISTINGS'
 export const RECEIVE_LISTINGS = 'RECEIVE_LISTINGS'
 export const INVALIDATE_LISTINGS = 'INVALIDATE_LISTINGS'
+export const CHANGE_LOCATION = 'CHANGE_LOCATION'
+
+export function changeLocation(location) {
+	return {
+		type: CHANGE_LOCATION,
+		location
+	}
+}
 
 export function invalidateListings(location) {
 	return {
@@ -19,12 +27,10 @@ function requestListings(location) {
 }
 
 function recieveListings(location, json) {
-	console.log('  -- recieved listings', json)
 	return {
 		type: RECEIVE_LISTINGS,
-		location,
 		listings: json,
-		receivedAt: new Date(Date.now())
+		receivedAt: Date.now()
 	}
 }
 
@@ -38,14 +44,17 @@ function fetchListings(location) {
 	}
 }
 
+// should this cache listings?
 function shouldFetchListings(state, location) {
 	const listings = state.listings
-	if (!listings) {
+	if (listings.items.length == 0) {
 		return true
 	} else if (listings.isFetching) {
 		return false
+	} else if (listings.didInvalidate) {
+		return true
 	} else {
-		return listings.didInvalidate
+		return true
 	}
 }
 
