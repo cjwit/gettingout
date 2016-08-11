@@ -1,0 +1,51 @@
+{
+  "name": "gettingout",
+  "version": "1.0.0",
+  "description": "Find your friends by sharing your food and drink plans. Uses React, Redux, Node, MongoDB, and the Yelp API.",
+  "main": "server/server.js",
+  "dependencies": {
+    "compression": "^1.6.2",
+    "express": "^4.14.0",
+    "isomorphic-fetch": "^2.2.1",
+    "path": "^0.12.7",
+    "react": "^15.3.0",
+    "react-dom": "^15.3.0",
+    "react-redux": "^4.4.5",
+    "redux": "^3.5.2",
+    "redux-thunk": "^2.1.0"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-stage-0": "^6.5.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.0",
+    "chalk": "^1.1.3",
+    "gulp": "^3.9.1",
+    "gulp-duration": "0.0.0",
+    "gulp-livereload": "^3.8.1",
+    "gulp-notify": "^2.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.2",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-util": "^3.0.7",
+    "redux-logger": "^2.6.1",
+    "utils-merge": "^1.0.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cjwit/gettingout.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cjwit/gettingout/issues"
+  },
+  "homepage": "https://github.com/cjwit/gettingout#readme"
+}
