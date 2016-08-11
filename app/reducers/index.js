@@ -1,5 +1,7 @@
 import { combineReducers } from 'redux'
+import { REQUEST_LISTINGS, RECEIVE_LISTINGS, INVALIDATE_LISTINGS } from '../actions'
 
+/* LOGIN logic here
 function selectedSubreddit(state = 'frontend', action) {
 	switch (action.type) {
 		case 'SELECT_SUBREDDIT':
@@ -8,35 +10,37 @@ function selectedSubreddit(state = 'frontend', action) {
 			return state
 	}
 }
+*/
 
-function posts(state = {
+function listings(state = {
 	isFetching: false,
 	didInvalidate: false,
 	items: []
 }, action) {
 	switch (action.type) {
-		case 'INVALIDATE_SUBREDDIT':
+		case INVALIDATE_LISTINGS:
 			return Object.assign({}, state, { didInvalidate: true })
-		case 'REQUEST_POSTS':
+		case REQUEST_LISTINGS:
 			return Object.assign({}, state, { isFetching: true, didInvalidate: false })
-		case 'RECEIVE_POSTS':
+		case RECEIVE_LISTINGS:
 			return Object.assign({}, state, {
 				isFetching: false,
 				didInvalidate: false,
-				items: action.posts,
+				location: action.location,
+				items: action.listings,
 				lastUpdated: action.receivedAt })
 		default:
 			return state
 	}
 }
 
-function postsBySubreddit(state = {}, action) {
+function listingsFromYelp(state = {}, action) {
 	switch (action.type) {
-		case 'INVALIDATE_SUBREDDIT':
-		case 'RECEIVE_POSTS':
-		case 'REQUEST_POSTS':
+		case INVALIDATE_LISTINGS:
+		case REQUEST_LISTINGS:
+		case RECEIVE_LISTINGS:
 			return Object.assign({}, state, {
-				[action.subreddit]: posts(state[action.subreddit], action)
+				listings: listings(state.listings, action)
 			})
 		default:
 			return state
@@ -44,8 +48,7 @@ function postsBySubreddit(state = {}, action) {
 }
 
 const rootReducer = combineReducers({
-	postsBySubreddit,
-	selectedSubreddit
+	listingsFromYelp
 })
 
 export default rootReducer
