@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var compress = require('compression');
 var oauthSignature = require('oauth-signature');
-var n = require('nonce');
+var n = require('nonce')();
 var request = require('request');
 var qs = require('querystring');
 var _ = require('lodash')
@@ -17,7 +17,8 @@ var request_yelp = function(set_parameters, callback) {
 	var httpMethod = 'GET';
 	var url = 'http://api.yelp.com/v2/search';
 	var default_parameters = {
-	//	sort: '2'
+		sort: '2',
+		category_filter: 'bars'
 	}
 	var required_parameters = {
 		oauth_consumer_key: process.env.CONSUMER_KEY,
@@ -28,44 +29,38 @@ var request_yelp = function(set_parameters, callback) {
 		oauth_version: '1.0'
 	}
 
-	console.log('consumer key', required_parameters.oauth_consumer_key)
-	console.log('token', required_parameters.oauth_token)
-	console.log('timestamp', required_parameters.oauth_timestamp)
-
 	var parameters = _.assign(default_parameters, set_parameters, required_parameters);
-
-	console.log(parameters)
-
 	var consumerSecret = process.env.CONSUMER_SECRET;
 	var tokenSecret = process.env.TOKEN_SECRET;
-
-	console.log('consumer secret', consumerSecret)
-	console.log('token secret', tokenSecret)
-
 	var signature = oauthSignature.generate(httpMethod, url, parameters, consumerSecret, tokenSecret, { encodeSignature: false });
-
-	console.log('call for signature', httpMethod, url, parameters, consumerSecret, tokenSecret)
 	parameters.oauth_signature = signature;
-
-	console.log('oauth_signature', signature, parameters.oauth_signature)
-
 	var paramURL = qs.stringify(parameters);
 	var apiURL = url + '?' + paramURL;
-
-	console.log('query url', apiURL)
-
 	request(apiURL, (error, response, body) => {
 		return callback(error, response, body)
 	})
 }
 
 app.get('/yelp/:location', function(req, res) {
-	console.log('api called')
-
+	console.log('Yelp api called')
 	var location = req.params.location;
-	var cb = function(err, res, body) { console.log(err, body) }
 
-	request_yelp({ location: location }, cb);
+	request_yelp({ location: location }, (err, result, body) => {
+		if (err) { res.json(err) }
+		var body = JSON.parse(body)
+		var listings = [];
+		body.businesses.map(listing => {
+			console.log(" -- ", listing.name);
+			listings.push({
+				name: listing.name,
+				url: listing.url,
+				image: listing.image_url,
+				address: listing.location.address,
+				rating: listing.rating
+			})
+		})
+		res.json(listings);
+	});
 })
 
 app.get('/*', function(req, res) {

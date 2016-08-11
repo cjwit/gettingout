@@ -1,13 +1,4 @@
 import fetch from 'isomorphic-fetch'
-import { config } from '../config.js'
-/*
-export function selectSubreddit(subreddit) {
-	return {
-		type: 'SELECT_SUBREDDIT',
-		subreddit
-	}
-}
-*/
 
 export const REQUEST_LISTINGS = 'REQUEST_LISTINGS'
 export const RECEIVE_LISTINGS = 'RECEIVE_LISTINGS'
@@ -28,10 +19,11 @@ function requestListings(location) {
 }
 
 function recieveListings(location, json) {
+	console.log('  -- recieved listings', json)
 	return {
 		type: RECEIVE_LISTINGS,
 		location,
-		listings: json.body,
+		listings: json,
 		receivedAt: new Date(Date.now())
 	}
 }
@@ -39,12 +31,9 @@ function recieveListings(location, json) {
 function fetchListings(location) {
 	return dispatch => {
 		dispatch(requestListings(location))
-		return fetch(`/yelp/${location}`)
-			.then(response => {
-				console.log(response)
-				return response
-			})
-			.then(response => dispatch(recieveListings(location, response)))
+		return fetch(`/yelp/${location}.json`)
+			.then(response => response.json())
+			.then(json => dispatch(recieveListings(location, json)))
 			.catch(err => console.error("Caught Error:", err))
 	}
 }
