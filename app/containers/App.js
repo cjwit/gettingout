@@ -26,7 +26,7 @@ class App extends Component {
 	}
 
 	render() {
-		const { location, listings, isFetching, lastUpdated } = this.props
+		const { location, listings, isFetching, lastUpdated, selected, user } = this.props
 		return (
 			<div>
 				<h1>{ location }</h1>
@@ -49,7 +49,7 @@ class App extends Component {
 				}
 				{ listings.length > 0 &&
 					<div style = {{ opacity: isFetching ? 0.5 : 1 }} >
-						<Listings listings = { listings } />
+						<Listings listings = { listings } selected = { selected } user = { user } />
 					</div>
 				}
 			</div>
@@ -72,14 +72,18 @@ function mapStateToProps(state) {
 	const location = state.location,
 		  listings = state.listings.items,
 		  isFetching = state.listings.isFetching,
-		  lastUpdated = state.listings.lastUpdated;
+		  lastUpdated = state.listings.lastUpdated,
+		  user = state.user,
+		  selected = state.selected;
 	console.log(' -- props')
-	console.log(location, listings, isFetching, lastUpdated)
+	console.log(location, listings, isFetching, lastUpdated, selected)
 	return {
 		location,
 		listings,
 		isFetching,
-		lastUpdated
+		lastUpdated,
+		selected,
+		user
 	}
 }
 

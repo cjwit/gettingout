@@ -1,9 +1,13 @@
 import fetch from 'isomorphic-fetch'
 
+export const CHANGE_LOCATION = 'CHANGE_LOCATION'
+
 export const REQUEST_LISTINGS = 'REQUEST_LISTINGS'
 export const RECEIVE_LISTINGS = 'RECEIVE_LISTINGS'
 export const INVALIDATE_LISTINGS = 'INVALIDATE_LISTINGS'
-export const CHANGE_LOCATION = 'CHANGE_LOCATION'
+
+export const GOING = 'GOING'
+export const NOT_GOING = 'NOT_GOING'
 
 export function changeLocation(location) {
 	return {
@@ -12,6 +16,8 @@ export function changeLocation(location) {
 	}
 }
 
+// FETCH LISTINGS
+// is this ever called?
 export function invalidateListings(location) {
 	return {
 		type: INVALIDATE_LISTINGS,
@@ -44,7 +50,6 @@ function fetchListings(location) {
 	}
 }
 
-// should this cache listings?
 function shouldFetchListings(state, location) {
 	const listings = state.listings
 	if (listings.items.length == 0) {
@@ -65,5 +70,22 @@ export function fetchListingsIfNeeded(location) {
 		} else {
 			return Promise.resolve()
 		}
+	}
+}
+
+// EDIT GOING
+export function addGoing(yelpID, user) {
+	return {
+		type: GOING,
+		yelpID,
+		user
+	}
+}
+
+export function notGoing(yelpID, user) {
+	return {
+		type: NOT_GOING,
+		yelpID,
+		user
 	}
 }
