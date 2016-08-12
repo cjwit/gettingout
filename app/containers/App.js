@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { invalidateListings, fetchListingsIfNeeded, changeLocation } from '../actions'
 import Listings from '../components/Listings'
-import Picker from '../components/Picker'
+import InputSubmit from '../components/InputSubmit'
 
 class App extends Component {
 	componentDidMount() {
@@ -13,10 +13,10 @@ class App extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		console.log('receiving props')
+		console.log('### Receiving props')
 		if (nextProps.location !== this.props.location) {
 			const { dispatch, location } = nextProps
-			console.log('updating for', location)
+			console.log(' -- updating for', location)
 			dispatch(fetchListingsIfNeeded(location))
 		}
 	}
@@ -29,9 +29,10 @@ class App extends Component {
 		const { location, listings, isFetching, lastUpdated } = this.props
 		return (
 			<div>
-				<Picker value = { location }
-						onChange = { this.handleChange }
-						options = {[ 'Rochester, NY', 'Syracuse, NY' ]} />
+				<h1>{ location }</h1>
+				<InputSubmit name = 'locationInput'
+						submitFunction = { this.handleChange }
+						placeholder = 'Where are you?' />
 				<p>
 					{ lastUpdated &&
 						<span>
@@ -65,13 +66,14 @@ App.propTypes = {
 }
 
 function mapStateToProps(state) {
-	console.log('mapStateToProps')
+	console.log('### mapStateToProps')
+	console.log(' -- state:')
 	console.log(state)
 	const location = state.location,
 		  listings = state.listings.items,
 		  isFetching = state.listings.isFetching,
 		  lastUpdated = state.listings.lastUpdated;
-	console.log('props')
+	console.log(' -- props')
 	console.log(location, listings, isFetching, lastUpdated)
 	return {
 		location,

@@ -107,6 +107,142 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var InputSubmit = function (_Component) {
+	_inherits(InputSubmit, _Component);
+
+	function InputSubmit() {
+		var _Object$getPrototypeO;
+
+		var _temp, _this, _ret;
+
+		_classCallCheck(this, InputSubmit);
+
+		for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+			args[_key] = arguments[_key];
+		}
+
+		return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(InputSubmit)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+			value: ""
+		}, _this.submitValue = function (e) {
+			e.preventDefault();
+			var value = _this.state.value,
+			    submitFunction = _this.props.submitFunction;
+
+			console.log('value from input', value);
+			submitFunction(value);
+			_this.resetForm();
+		}, _this.handleInputChange = function (e) {
+			e.preventDefault();
+			var name = e.target.name;
+			var value = e.target.value;
+			var state = _this.state;
+			state[name] = value;
+			_this.setState(state);
+			_this.validateForm();
+		}, _temp), _possibleConstructorReturn(_this, _ret);
+	}
+
+	_createClass(InputSubmit, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			var submit = $('#' + this.props.name);
+			submit.prop('disabled', true);
+
+			// set listener for clicking Enter
+			$('#value').keypress(function (e) {
+				var keycode = e.keyCode ? e.keyCode : e.which;
+				if (keycode == '13') {
+					submit.click();
+				}
+			});
+		}
+	}, {
+		key: 'resetForm',
+		value: function resetForm() {
+			this.setState({ value: "" });
+			$('#' + this.props.name).prop('disabled', true);
+		}
+	}, {
+		key: 'validateForm',
+		value: function validateForm() {
+			// set submit button
+			var submit = $('#' + this.props.name),
+			    value = this.state.value.length > 0,
+			    valid = value;
+			if (valid) {
+				submit.prop('disabled', false);
+			} else {
+				submit.prop('disabled', true);
+			}
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var onClick = this.submitValue;
+			var errorDivId = "error_" + this.props.name;
+
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'div',
+					{ className: 'form-group' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'input-group' },
+						_react2.default.createElement('input', { type: 'text', className: 'form-control',
+							id: 'value',
+							name: 'value',
+							placeholder: this.props.placeholder,
+							value: this.state.value,
+							onChange: this.handleInputChange }),
+						_react2.default.createElement(
+							'span',
+							{ className: 'input-group-btn' },
+							_react2.default.createElement(
+								'button',
+								{ id: this.props.name, className: 'btn btn-default', onClick: onClick, type: 'button' },
+								'Submit'
+							)
+						)
+					)
+				),
+				_react2.default.createElement('div', { id: errorDivId, className: 'alert alert-danger hidden' })
+			);
+		}
+	}]);
+
+	return InputSubmit;
+}(_react.Component);
+
+InputSubmit.propTypes = {
+	submitFunction: _react.PropTypes.func.isRequired,
+	name: _react.PropTypes.string.isRequired,
+	placeholder: _react.PropTypes.string.isRequired
+};
+exports.default = InputSubmit;
+
+},{"react":197}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var Listings = function (_Component) {
 	_inherits(Listings, _Component);
 
@@ -141,82 +277,6 @@ exports.default = Listings;
 
 Listings.propTypes = {
 	listings: _react.PropTypes.array.isRequired
-};
-
-},{"react":197}],3:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Picker = function (_Component) {
-	_inherits(Picker, _Component);
-
-	function Picker() {
-		_classCallCheck(this, Picker);
-
-		return _possibleConstructorReturn(this, Object.getPrototypeOf(Picker).apply(this, arguments));
-	}
-
-	_createClass(Picker, [{
-		key: 'render',
-		value: function render() {
-			var _props = this.props;
-			var value = _props.value;
-			var _onChange = _props.onChange;
-			var options = _props.options;
-
-
-			return _react2.default.createElement(
-				'span',
-				null,
-				_react2.default.createElement(
-					'h1',
-					null,
-					value
-				),
-				_react2.default.createElement(
-					'select',
-					{ onChange: function onChange(e) {
-							return _onChange(e.target.value);
-						}, value: value },
-					options.map(function (option) {
-						return _react2.default.createElement(
-							'option',
-							{ value: option, key: option },
-							option
-						);
-					})
-				)
-			);
-		}
-	}]);
-
-	return Picker;
-}(_react.Component);
-
-exports.default = Picker;
-
-
-Picker.propTypes = {
-	options: _react.PropTypes.arrayOf(_react.PropTypes.string.isRequired).isRequired,
-	value: _react.PropTypes.string.isRequired,
-	onChange: _react.PropTypes.func.isRequired
 };
 
 },{"react":197}],4:[function(require,module,exports){
@@ -270,9 +330,9 @@ var _Listings = require('../components/Listings');
 
 var _Listings2 = _interopRequireDefault(_Listings);
 
-var _Picker = require('../components/Picker');
+var _InputSubmit = require('../components/InputSubmit');
 
-var _Picker2 = _interopRequireDefault(_Picker);
+var _InputSubmit2 = _interopRequireDefault(_InputSubmit);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -314,12 +374,12 @@ var App = function (_Component) {
 	}, {
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(nextProps) {
-			console.log('receiving props');
+			console.log('### Receiving props');
 			if (nextProps.location !== this.props.location) {
 				var dispatch = nextProps.dispatch;
 				var location = nextProps.location;
 
-				console.log('updating for', location);
+				console.log(' -- updating for', location);
 				dispatch((0, _actions.fetchListingsIfNeeded)(location));
 			}
 		}
@@ -335,9 +395,14 @@ var App = function (_Component) {
 			return _react2.default.createElement(
 				'div',
 				null,
-				_react2.default.createElement(_Picker2.default, { value: location,
-					onChange: this.handleChange,
-					options: ['Rochester, NY', 'Syracuse, NY'] }),
+				_react2.default.createElement(
+					'h1',
+					null,
+					location
+				),
+				_react2.default.createElement(_InputSubmit2.default, { name: 'locationInput',
+					submitFunction: this.handleChange,
+					placeholder: 'Where are you?' }),
 				_react2.default.createElement(
 					'p',
 					null,
@@ -381,13 +446,14 @@ App.propTypes = {
 };
 
 function mapStateToProps(state) {
-	console.log('mapStateToProps');
+	console.log('### mapStateToProps');
+	console.log(' -- state:');
 	console.log(state);
 	var location = state.location,
 	    listings = state.listings.items,
 	    isFetching = state.listings.isFetching,
 	    lastUpdated = state.listings.lastUpdated;
-	console.log('props');
+	console.log(' -- props');
 	console.log(location, listings, isFetching, lastUpdated);
 	return {
 		location: location,
@@ -399,7 +465,7 @@ function mapStateToProps(state) {
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps)(App);
 
-},{"../actions":1,"../components/Listings":2,"../components/Picker":3,"react":197,"react-redux":43}],6:[function(require,module,exports){
+},{"../actions":1,"../components/InputSubmit":2,"../components/Listings":3,"react":197,"react-redux":43}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
