@@ -271,14 +271,41 @@ var Item = function (_Component) {
 	_inherits(Item, _Component);
 
 	function Item() {
+		var _Object$getPrototypeO;
+
+		var _temp, _this, _ret;
+
 		_classCallCheck(this, Item);
 
-		return _possibleConstructorReturn(this, Object.getPrototypeOf(Item).apply(this, arguments));
+		for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+			args[_key] = arguments[_key];
+		}
+
+		return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Item)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+			going: false
+		}, _this.handleGoing = function (e) {
+			_this.setState({ going: !_this.state.going });
+			_this.props.addGoing();
+		}, _this.handleNotGoing = function (e) {
+			e.preventDefault();
+			_this.setState({ going: !_this.state.going });
+			_this.props.notGoing();
+		}, _temp), _possibleConstructorReturn(_this, _ret);
 	}
 
 	_createClass(Item, [{
 		key: 'render',
 		value: function render() {
+			var button = this.state.going ? _react2.default.createElement(
+				'button',
+				{ className: 'btn btn-default btn-xs', onClick: this.handleNotGoing },
+				'I\'m going'
+			) : _react2.default.createElement(
+				'button',
+				{ className: 'btn btn-default btn-xs', onClick: this.handleGoing },
+				'Go!'
+			);
+
 			return _react2.default.createElement(
 				'li',
 				null,
@@ -290,16 +317,8 @@ var Item = function (_Component) {
 					this.props.going,
 					' '
 				),
-				_react2.default.createElement(
-					'button',
-					{ className: 'btn btn-default btn-xs', onClick: this.props.addGoing },
-					'Go!'
-				),
-				_react2.default.createElement(
-					'button',
-					{ className: 'btn btn-default btn-xs', onClick: this.props.notGoing },
-					'Leave!'
-				)
+				' ',
+				button
 			);
 		}
 	}]);
