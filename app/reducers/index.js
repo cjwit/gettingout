@@ -46,6 +46,8 @@ function selected(state, action) {
 					inArray = true
 				}
 			});
+
+			// add item if it was not previously in selected
 			if (!inArray) {
 				goingState.push({ yelpID: action.yelpID, going: 1 })
 			}
@@ -58,7 +60,10 @@ function selected(state, action) {
 					listing.going--
 				}
 			});
-			return notGoingState
+
+			// remove items if no one is going
+			return notGoingState.filter((listing) => listing.going > 0)
+
 		default:
 			return state
 	}

@@ -294,6 +294,11 @@ var Item = function (_Component) {
 					'button',
 					{ className: 'btn btn-default btn-xs', onClick: this.props.addGoing },
 					'Go!'
+				),
+				_react2.default.createElement(
+					'button',
+					{ className: 'btn btn-default btn-xs', onClick: this.props.notGoing },
+					'Leave!'
 				)
 			);
 		}
@@ -591,6 +596,10 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
 	return {
 		addGoing: function addGoing() {
 			dispatch((0, _actions.addGoing)(ownProps.item.yelpID, ownProps.user));
+		},
+
+		notGoing: function notGoing() {
+			dispatch((0, _actions.notGoing)(ownProps.item.yelpID, ownProps.user));
 		}
 	};
 };
@@ -742,6 +751,8 @@ function selected(state, action) {
 					inArray = true;
 				}
 			});
+
+			// add item if it was not previously in selected
 			if (!inArray) {
 				goingState.push({ yelpID: action.yelpID, going: 1 });
 			}
@@ -756,7 +767,12 @@ function selected(state, action) {
 					listing.going--;
 				}
 			});
-			return notGoingState;
+
+			// remove items if no one is going
+			return notGoingState.filter(function (listing) {
+				return listing.going > 0;
+			});
+
 		default:
 			return state;
 	}
