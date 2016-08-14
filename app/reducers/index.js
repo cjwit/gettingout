@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux'
-import { REQUEST_LISTINGS,
-		 RECEIVE_LISTINGS,
-		 INVALIDATE_LISTINGS,
+import { LISTINGS_REQUEST,
+		 LISTINGS_RECEIVE,
+		 LISTINGS_INVALIDATE,
+		 LISTINGS_FAILURE,
 		 CHANGE_LOCATION,
 		 GOING,
 		 NOT_GOING } from '../actions'
@@ -20,16 +21,18 @@ const initialState = {
 
 function listing(state, action) {
 	switch (action.type) {
-		case INVALIDATE_LISTINGS:
+		case LISTINGS_INVALIDATE:
 			return Object.assign({}, state, { didInvalidate: true })
-		case REQUEST_LISTINGS:
+		case LISTINGS_REQUEST:
 			return Object.assign({}, state, { isFetching: true, didInvalidate: false })
-		case RECEIVE_LISTINGS:
+		case LISTINGS_RECEIVE:
 			return Object.assign({}, state, {
 				isFetching: false,
 				didInvalidate: false,
-				items: action.listings,
-				lastUpdated: action.receivedAt })
+				items: action.payload,
+				lastUpdated: Date.now() })
+		case LISTINGS_FAILURE:
+			return state
 		default:
 			return state
 	}
@@ -71,9 +74,10 @@ function selected(state, action) {
 
 function reducer(state = initialState, action) {
 	switch (action.type) {
-		case INVALIDATE_LISTINGS:
-		case REQUEST_LISTINGS:
-		case RECEIVE_LISTINGS:
+		case LISTINGS_INVALIDATE:
+		case LISTINGS_REQUEST:
+		case LISTINGS_RECEIVE:
+		case LISTINGS_FAILURE:
 			return Object.assign({}, state, {
 				listings: listing(state.listings, action)
 			})

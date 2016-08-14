@@ -50,7 +50,6 @@ app.get('/yelp/:location', function(req, res) {
 		var body = JSON.parse(body)
 		var listings = [];
 		body.businesses.map(listing => {
-			console.log(" -- ", listing.name);
 			listings.push({
 				name: listing.name,
 				yelpID: listing.id,

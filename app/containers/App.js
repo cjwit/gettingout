@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { invalidateListings, fetchListingsIfNeeded, changeLocation } from '../actions'
+import { invalidateListings, fetchListingsIfNeeded, requestListingsAPI, changeLocation } from '../actions'
 import Listings from '../components/Listings'
 import InputSubmit from '../components/InputSubmit'
 
@@ -17,7 +17,7 @@ class App extends Component {
 		if (nextProps.location !== this.props.location) {
 			const { dispatch, location } = nextProps
 			console.log(' -- updating for', location)
-			dispatch(fetchListingsIfNeeded(location))
+			dispatch(requestListingsAPI(location))
 		}
 	}
 
