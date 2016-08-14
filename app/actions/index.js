@@ -1,4 +1,3 @@
-import fetch from 'isomorphic-fetch'
 import { CALL_API } from 'redux-api-middleware'
 
 export const CHANGE_LOCATION = 'CHANGE_LOCATION'

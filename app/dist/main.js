@@ -11,13 +11,7 @@ exports.requestListingsAPI = requestListingsAPI;
 exports.addGoing = addGoing;
 exports.notGoing = notGoing;
 
-var _isomorphicFetch = require('isomorphic-fetch');
-
-var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
 var _reduxApiMiddleware = require('redux-api-middleware');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -71,7 +65,7 @@ function notGoing(yelpID, user) {
 	};
 }
 
-},{"isomorphic-fetch":106,"redux-api-middleware":273}],2:[function(require,module,exports){
+},{"redux-api-middleware":273}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
