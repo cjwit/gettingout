@@ -31,11 +31,14 @@ export function requestListingsAPI(location) {
 		[CALL_API]: {
 			endpoint: `/yelp/${location}`,
 			method: 'GET',
-			types: [ LISTINGS_REQUEST, LISTINGS_RECEIVE, LISTINGS_FAILURE]
+			types: [ LISTINGS_REQUEST, LISTINGS_RECEIVE, LISTINGS_FAILURE ]
 		}
 	}
 }
-// EDIT GOING
+
+// EDIT GOING... updateSelected(yelpID, user, going)
+// use CALL_API with [CALL_API].body set to the id, user, and true/false (adding/subtracting)
+// reducers should update state with the listing
 export function addGoing(yelpID, user) {
 	return {
 		type: GOING,

@@ -2,6 +2,7 @@
 var express = require('express');
 var path = require('path');
 var compress = require('compression');
+var mongoose = require('mongoose');
 
 // controllers
 var yelpController = require('./controllers/yelpController');
@@ -21,3 +22,7 @@ var port = process.env.PORT || 8080;
 app.listen(port, function() {
     console.log("   Listening on port ", port, "...");
 });
+
+// connect to database
+var dburl = process.env.DBURL;
+mongoose.connect(dburl)
