@@ -4,12 +4,12 @@
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.NOT_GOING = exports.GOING = exports.LISTINGS_FAILURE = exports.LISTINGS_INVALIDATE = exports.LISTINGS_RECEIVE = exports.LISTINGS_REQUEST = exports.CHANGE_LOCATION = undefined;
+exports.GET_SELECTED_FAILURE = exports.GET_SELECTED_RECEIVE = exports.GET_SELECTED_REQUEST = exports.UPDATE_FAILURE = exports.UPDATE_RECEIVE = exports.UPDATE_REQUEST = exports.LISTINGS_FAILURE = exports.LISTINGS_INVALIDATE = exports.LISTINGS_RECEIVE = exports.LISTINGS_REQUEST = exports.CHANGE_LOCATION = undefined;
 exports.changeLocation = changeLocation;
 exports.invalidateListings = invalidateListings;
 exports.requestListingsAPI = requestListingsAPI;
-exports.addGoing = addGoing;
-exports.notGoing = notGoing;
+exports.updateSelected = updateSelected;
+exports.getSelectedVenues = getSelectedVenues;
 
 var _reduxApiMiddleware = require('redux-api-middleware');
 
@@ -22,8 +22,13 @@ var LISTINGS_RECEIVE = exports.LISTINGS_RECEIVE = 'LISTINGS_RECEIVE';
 var LISTINGS_INVALIDATE = exports.LISTINGS_INVALIDATE = 'LISTINGS_INVALIDATE';
 var LISTINGS_FAILURE = exports.LISTINGS_FAILURE = 'LISTINGS_FAILURE';
 
-var GOING = exports.GOING = 'GOING';
-var NOT_GOING = exports.NOT_GOING = 'NOT_GOING';
+var UPDATE_REQUEST = exports.UPDATE_REQUEST = 'UPDATE_REQUEST';
+var UPDATE_RECEIVE = exports.UPDATE_RECEIVE = 'UPDATE_RECEIVE';
+var UPDATE_FAILURE = exports.UPDATE_FAILURE = 'UPDATE_FAILURE';
+
+var GET_SELECTED_REQUEST = exports.GET_SELECTED_REQUEST = 'GET_SELECTED_REQUEST';
+var GET_SELECTED_RECEIVE = exports.GET_SELECTED_RECEIVE = 'GET_SELECTED_RECEIVE';
+var GET_SELECTED_FAILURE = exports.GET_SELECTED_FAILURE = 'GET_SELECTED_FAILURE';
 
 function changeLocation(location) {
 	return {
@@ -52,20 +57,21 @@ function requestListingsAPI(location) {
 // EDIT GOING... updateSelected(yelpID, user, going)
 // use CALL_API with [CALL_API].body set to the id, user, and true/false (adding/subtracting)
 // reducers should update state with the listing
-function addGoing(yelpID, user) {
-	return {
-		type: GOING,
-		yelpID: yelpID,
-		user: user
-	};
+function updateSelected(yelpID, user, going) {
+	return _defineProperty({}, _reduxApiMiddleware.CALL_API, {
+		enpoint: '/venues/' + yelpID,
+		method: 'POST',
+		body: JSON.stringify({ user: user, going: going }),
+		types: [UPDATE_REQUEST, UPDATE_RECEIVE, UPDATE_FAILURE]
+	});
 }
 
-function notGoing(yelpID, user) {
-	return {
-		type: NOT_GOING,
-		yelpID: yelpID,
-		user: user
-	};
+function getSelectedVenues() {
+	return _defineProperty({}, _reduxApiMiddleware.CALL_API, {
+		enpoint: '/venues',
+		method: 'GET',
+		types: [GET_SELECTED_REQUEST, GET_SELECTED_RECEIVE, GET_SELECTED_FAILURE]
+	});
 }
 
 },{"redux-api-middleware":273}],2:[function(require,module,exports){
@@ -337,7 +343,7 @@ var Listings = function (_Component) {
 				null,
 				this.props.listings.map(function (listing, i) {
 					var going = 0;
-					_this2.props.selected.map(function (s) {
+					_this2.props.selected.venues.map(function (s) {
 						if (s.yelpID == listing.yelpID) {
 							going += s.going;
 						}
@@ -356,7 +362,7 @@ exports.default = Listings;
 
 Listings.propTypes = {
 	listings: _react.PropTypes.array.isRequired,
-	selected: _react.PropTypes.array.isRequired,
+	selected: _react.PropTypes.object.isRequired,
 	user: _react.PropTypes.string.isRequired
 };
 
@@ -450,6 +456,8 @@ var App = function (_Component) {
 			var _props = this.props;
 			var dispatch = _props.dispatch;
 			var location = _props.location;
+
+			dispatch((0, _actions.getSelectedVenues)());
 
 			// do not load anything at the outset
 			// dispatch(fetchListingsIfNeeded(selectedSubreddit))
@@ -697,7 +705,10 @@ var initialState = {
 		lastUpdated: Date.now(),
 		items: []
 	},
-	selected: []
+	selected: {
+		isFetching: false,
+		venues: []
+	}
 };
 
 function listing(state, action) {
@@ -721,38 +732,19 @@ function listing(state, action) {
 
 function selected(state, action) {
 	switch (action.type) {
-		case _actions.GOING:
-			var inArray = false;
-			var goingState = state.map(function (listing) {
-				return listing;
-			});
-			goingState.forEach(function (listing) {
-				if (listing.yelpID === action.yelpID) {
-					listing.going++;
-					inArray = true;
-				}
-			});
+		case _actions.GET_SELECTED_REQUEST:
+		case _actions.UPDATE_REQUEST:
+			return Object.assign({}, state, { isFetching: true });
 
-			// add item if it was not previously in selected
-			if (!inArray) {
-				goingState.push({ yelpID: action.yelpID, going: 1 });
-			}
-			return goingState;
+		case _actions.GET_SELECTED_RECEIVE:
+		case _actions.UPDATE_RECEIVE:
+			return Object.assign({}, state, {
+				isFetching: false,
+				venues: action.payload });
 
-		case _actions.NOT_GOING:
-			var notGoingState = state.map(function (listing) {
-				return listing;
-			});
-			notGoingState.forEach(function (listing) {
-				if (listing.yelpID === action.yelpID) {
-					listing.going--;
-				}
-			});
-
-			// remove items if no one is going
-			return notGoingState.filter(function (listing) {
-				return listing.going > 0;
-			});
+		case _actions.GET_SELECTED_FAILURE:
+		case _actions.UPDATE_FAILURE:
+			return state;
 
 		default:
 			return state;
@@ -771,13 +763,19 @@ function reducer() {
 			return Object.assign({}, state, {
 				listings: listing(state.listings, action)
 			});
+
 		case _actions.CHANGE_LOCATION:
 			console.log('from reducer, location:', action.location);
 			return Object.assign({}, state, {
 				location: action.location
 			});
-		case _actions.GOING:
-		case _actions.NOT_GOING:
+
+		case _actions.UPDATE_REQUEST:
+		case _actions.UPDATE_RECEIVE:
+		case _actions.UPDATE_FAILURE:
+		case _actions.GET_SELECTED_REQUEST:
+		case _actions.GET_SELECTED_RECEIVE:
+		case _actions.GET_SELECTED_FAILURE:
 			return Object.assign({}, state, {
 				selected: selected(state.selected, action)
 			});

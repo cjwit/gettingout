@@ -7,7 +7,7 @@ export default class Listings extends Component {
 			<ul>
 				{ this.props.listings.map((listing, i) => {
 					let going = 0;
-					this.props.selected.map((s) => {
+					this.props.selected.venues.map((s) => {
 						if (s.yelpID == listing.yelpID) { going += s.going }
 					})
 					return <ItemContainer key = { i } item = { listing } going = { going } user = { this.props.user } />
@@ -19,6 +19,6 @@ export default class Listings extends Component {
 
 Listings.propTypes = {
 	listings: PropTypes.array.isRequired,
-	selected: PropTypes.array.isRequired,
+	selected: PropTypes.object.isRequired,
 	user: PropTypes.string.isRequired
 }

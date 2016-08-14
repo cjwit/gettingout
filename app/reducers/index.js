@@ -1,11 +1,8 @@
 import { combineReducers } from 'redux'
-import { LISTINGS_REQUEST,
-		 LISTINGS_RECEIVE,
-		 LISTINGS_INVALIDATE,
-		 LISTINGS_FAILURE,
+import { LISTINGS_REQUEST, LISTINGS_RECEIVE, LISTINGS_INVALIDATE, LISTINGS_FAILURE,
 		 CHANGE_LOCATION,
-		 GOING,
-		 NOT_GOING } from '../actions'
+		 UPDATE_REQUEST, UPDATE_RECEIVE, UPDATE_FAILURE,
+		 GET_SELECTED_REQUEST, GET_SELECTED_RECEIVE, GET_SELECTED_FAILURE } from '../actions'
 
 const initialState = {
 	location: '',
@@ -16,7 +13,10 @@ const initialState = {
 		lastUpdated: Date.now(),
 		items: []
 	},
-	selected: []
+	selected: {
+		isFetching: false,
+		venues: []
+	}
 }
 
 function listing(state, action) {
@@ -40,32 +40,19 @@ function listing(state, action) {
 
 function selected(state, action) {
 	switch (action.type) {
-		case GOING:
-			let inArray = false
-			let goingState = state.map((listing) => listing)
-			goingState.forEach((listing) => {
-				if (listing.yelpID === action.yelpID) {
-					listing.going++
-					inArray = true
-				}
-			});
+		case GET_SELECTED_REQUEST:
+		case UPDATE_REQUEST:
+			return Object.assign({}, state, { isFetching: true })
 
-			// add item if it was not previously in selected
-			if (!inArray) {
-				goingState.push({ yelpID: action.yelpID, going: 1 })
-			}
-			return goingState
+		case GET_SELECTED_RECEIVE:
+		case UPDATE_RECEIVE:
+			return Object.assign({}, state, {
+				isFetching: false,
+				venues: action.payload })
 
-		case NOT_GOING:
-			let notGoingState = state.map((listing) => listing)
-			notGoingState.forEach((listing) => {
-				if (listing.yelpID === action.yelpID) {
-					listing.going--
-				}
-			});
-
-			// remove items if no one is going
-			return notGoingState.filter((listing) => listing.going > 0)
+		case GET_SELECTED_FAILURE:
+		case UPDATE_FAILURE:
+			return state
 
 		default:
 			return state
@@ -81,13 +68,19 @@ function reducer(state = initialState, action) {
 			return Object.assign({}, state, {
 				listings: listing(state.listings, action)
 			})
+
 		case CHANGE_LOCATION:
 			console.log('from reducer, location:', action.location)
 			return Object.assign({}, state, {
 				location: action.location
 			})
-		case GOING:
-		case NOT_GOING:
+			
+		case UPDATE_REQUEST:
+		case UPDATE_RECEIVE:
+		case UPDATE_FAILURE:
+		case GET_SELECTED_REQUEST:
+		case GET_SELECTED_RECEIVE:
+		case GET_SELECTED_FAILURE:
 			return Object.assign({}, state, {
 				selected: selected(state.selected, action)
 			})

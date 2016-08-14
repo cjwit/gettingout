@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { invalidateListings, fetchListingsIfNeeded, requestListingsAPI, changeLocation } from '../actions'
+import { invalidateListings, fetchListingsIfNeeded, requestListingsAPI, changeLocation, getSelectedVenues } from '../actions'
 import Listings from '../components/Listings'
 import InputSubmit from '../components/InputSubmit'
 
 class App extends Component {
 	componentDidMount() {
 		const { dispatch, location } = this.props
+		dispatch(getSelectedVenues())
 
 		// do not load anything at the outset
 		// dispatch(fetchListingsIfNeeded(selectedSubreddit))

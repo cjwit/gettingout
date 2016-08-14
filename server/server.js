@@ -6,12 +6,14 @@ var mongoose = require('mongoose');
 
 // controllers
 var yelpController = require('./controllers/yelpController');
+var venueController = require('./controllers/venueController');
 
 var app = express();
 
 app.use(compress());
 app.use(express.static(path.join(__dirname, "../app/dist")));
 app.use('/yelp', yelpController);
+app.use('/venues', venueController);
 
 app.get('/*', function(req, res) {
     res.sendFile(path.join(__dirname, '../app/dist/index.html'));

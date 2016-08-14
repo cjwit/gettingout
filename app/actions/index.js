@@ -7,8 +7,13 @@ export const LISTINGS_RECEIVE = 'LISTINGS_RECEIVE'
 export const LISTINGS_INVALIDATE = 'LISTINGS_INVALIDATE'
 export const LISTINGS_FAILURE = 'LISTINGS_FAILURE'
 
-export const GOING = 'GOING'
-export const NOT_GOING = 'NOT_GOING'
+export const UPDATE_REQUEST = 'UPDATE_REQUEST'
+export const UPDATE_RECEIVE = 'UPDATE_RECEIVE'
+export const UPDATE_FAILURE = 'UPDATE_FAILURE'
+
+export const GET_SELECTED_REQUEST = 'GET_SELECTED_REQUEST'
+export const GET_SELECTED_RECEIVE = 'GET_SELECTED_RECEIVE'
+export const GET_SELECTED_FAILURE = 'GET_SELECTED_FAILURE'
 
 export function changeLocation(location) {
 	return {
@@ -39,18 +44,23 @@ export function requestListingsAPI(location) {
 // EDIT GOING... updateSelected(yelpID, user, going)
 // use CALL_API with [CALL_API].body set to the id, user, and true/false (adding/subtracting)
 // reducers should update state with the listing
-export function addGoing(yelpID, user) {
+export function updateSelected(yelpID, user, going) {
 	return {
-		type: GOING,
-		yelpID,
-		user
+		[CALL_API]: {
+			enpoint: `/venues/${yelpID}`,
+			method: 'POST',
+			body: JSON.stringify({ user, going }),
+			types: [ UPDATE_REQUEST, UPDATE_RECEIVE, UPDATE_FAILURE ]
+		}
 	}
 }
 
-export function notGoing(yelpID, user) {
+export function getSelectedVenues() {
 	return {
-		type: NOT_GOING,
-		yelpID,
-		user
+		[CALL_API]: {
+			enpoint: `/venues`,
+			method: 'GET',
+			types: [ GET_SELECTED_REQUEST, GET_SELECTED_RECEIVE, GET_SELECTED_FAILURE ]
+		}
 	}
 }

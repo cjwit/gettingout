@@ -9,7 +9,8 @@ router.route('/').get(getVenues);
 // get venues: call on initial load
 // return all currently selected venues for state
 function getVenues(req, res) {
-    Venue.find(function (err, venues) {
+	console.log('Getting venues')
+	Venue.find(function (err, venues) {
         if (err) res.send(err);
         else res.json(venues);
     });
@@ -32,14 +33,35 @@ function deleteVenue(id, res) {
     });
 }
 
-function editVenue(req, res) {
+function selectVenue(req, res) {
     var id = req.params.id;
     var info = req.body;
+	cnsole.log(' -- selectVenue called');
+	console.log(info); 									// { user, going }
 
 	// check current venues for a matching id
 	// if there is one:
 		// update the going list (find a good way to send this within the body)
 
+/* from reducer logic
+
+let inArray = false
+let goingState = state.map((listing) => listing)
+goingState.forEach((listing) => {
+	if (listing.yelpID === action.yelpID) {
+		listing.going++
+		inArray = true
+	}
+});
+
+// add item if it was not previously in selected
+if (!inArray) {
+	goingState.push({ yelpID: action.yelpID, going: 1 })
+}
+
+*/
+
+/*
     var query = { _id: id },
         update = { $set: {
             name: info.name,
@@ -56,6 +78,7 @@ function editVenue(req, res) {
         if (err) res.send(err);
         else res.json(updated);
     });
+*/
 
 	// if the list drops to 0, call deleteVenue(id, res)
 	// if not in the list, call addVenue(req, res)
