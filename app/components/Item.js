@@ -1,19 +1,15 @@
 import React, { PropTypes, Component } from 'react'
+import GoingButtonContainer from '../containers/GoingButtonContainer.js'
 
 export default class Item extends Component {
-	updateSelected = (e) => {
-		e.preventDefault();
-		this.props.updateSelected(this.props.item.yelpID, this.props.user, this.props.amGoing)
-	}
-
 	render() {
-		const button = <button className = { this.props.amGoing ? 'btn btn-default btn-xs btn-danger' : 'btn btn-default btn-xs btn-primary' } onClick = { this.updateSelected }>
-			{ this.props.amGoing ? "I'm backing out" : "I'm going tonight" }
-		</button>
-
 		return (
 			<li>{ this.props.item.name }
-				<span className = 'going'> Going: { this.props.going.length } </span> { button }
+				<span className = 'going'> Going: { this.props.going.length } </span>&nbsp;
+				<GoingButtonContainer
+					item = { this.props.item }
+					user = { this.props.user }
+					amGoing = { this.props.amGoing } />
 			</li>
 		)
 	}

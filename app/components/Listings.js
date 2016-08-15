@@ -1,9 +1,9 @@
 import React, { PropTypes, Component } from 'react'
-import ItemContainer from '../containers/ItemContainer.js'
+import Item from './Item.js'
 
 export default class Listings extends Component {
 	render() {
-		const ItemContainers = [];
+		const Items = [];
 		this.props.listings.forEach((listing, i) => {
 			let going = []
 			this.props.selected.venues.forEach((venue) => {
@@ -11,17 +11,17 @@ export default class Listings extends Component {
 					going = venue.going
 				}
 			});
-			ItemContainers.push(<ItemContainer
+			Items.push(<Item
 				key = { i }
 				item = { listing }
 				going = { going }
-				amGoing = { going.indexOf(this.props.user) !== -1 } 
+				amGoing = { going.indexOf(this.props.user) !== -1 }
 				user = { this.props.user } />)
 		})
 
 		return (
 			<ul>
-				{ ItemContainers }
+				{ Items }
 			</ul>
 		)
 	}

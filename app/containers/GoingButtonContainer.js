@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { updateSelected } from '../actions'
-import Item from '../components/Item'
+import GoingButton from '../components/GoingButton'
 
 const mapDispatchToProps = (dispatch, ownProps) => {
 	return {
@@ -10,9 +10,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 	}
 }
 
-const ItemContainer = connect(
+const GoingButtonContainer = connect(
 	null,
 	mapDispatchToProps
-)(Item)
+)(GoingButton)
 
-export default ItemContainer
+export default GoingButtonContainer
