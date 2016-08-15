@@ -250,12 +250,9 @@ var Item = function (_Component) {
 			args[_key] = arguments[_key];
 		}
 
-		return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Item)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
-			amGoing: _this.props.going.indexOf(_this.props.user) !== -1
-		}, _this.updateSelected = function (e) {
+		return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Item)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.updateSelected = function (e) {
 			e.preventDefault();
-			_this.props.updateSelected(_this.props.item.yelpID, _this.props.user, _this.state.amGoing);
-			_this.setState({ amGoing: !_this.state.amGoing });
+			_this.props.updateSelected(_this.props.item.yelpID, _this.props.user, _this.props.amGoing);
 		}, _temp), _possibleConstructorReturn(_this, _ret);
 	}
 
@@ -264,8 +261,8 @@ var Item = function (_Component) {
 		value: function render() {
 			var button = _react2.default.createElement(
 				'button',
-				{ className: this.state.amGoing ? 'btn btn-default btn-xs btn-danger' : 'btn btn-default btn-xs btn-primary', onClick: this.updateSelected },
-				this.state.amGoing ? "I'm backing out" : "I'm going tonight"
+				{ className: this.props.amGoing ? 'btn btn-default btn-xs btn-danger' : 'btn btn-default btn-xs btn-primary', onClick: this.updateSelected },
+				this.props.amGoing ? "I'm backing out" : "I'm going tonight"
 			);
 
 			return _react2.default.createElement(
@@ -294,6 +291,7 @@ exports.default = Item;
 Item.propTypes = {
 	item: _react.PropTypes.object.isRequired,
 	going: _react.PropTypes.array.isRequired,
+	amGoing: _react.PropTypes.bool.isRequired,
 	user: _react.PropTypes.string.isRequired
 };
 
@@ -344,7 +342,12 @@ var Listings = function (_Component) {
 						going = venue.going;
 					}
 				});
-				ItemContainers.push(_react2.default.createElement(_ItemContainer2.default, { key: i, item: listing, going: going, user: _this2.props.user }));
+				ItemContainers.push(_react2.default.createElement(_ItemContainer2.default, {
+					key: i,
+					item: listing,
+					going: going,
+					amGoing: going.indexOf(_this2.props.user) !== -1,
+					user: _this2.props.user }));
 			});
 
 			return _react2.default.createElement(

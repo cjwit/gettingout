@@ -11,7 +11,12 @@ export default class Listings extends Component {
 					going = venue.going
 				}
 			});
-			ItemContainers.push(<ItemContainer key = { i } item = { listing } going = { going } user = { this.props.user } />)
+			ItemContainers.push(<ItemContainer
+				key = { i }
+				item = { listing }
+				going = { going }
+				amGoing = { going.indexOf(this.props.user) !== -1 } 
+				user = { this.props.user } />)
 		})
 
 		return (
