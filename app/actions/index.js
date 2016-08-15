@@ -115,6 +115,7 @@ export function register(user) {
 	return {
 		[CALL_API]: {
 			endpoint: `/register`,
+			headers: { 'Content-Type': 'application/json' },
 			method: 'POST',
 			body: JSON.stringify(user),
 			types: [ REGISTER_USER_REQUEST, REGISTER_USER_SUCCESS, REGISTER_USER_FAILURE ]

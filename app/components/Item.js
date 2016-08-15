@@ -8,7 +8,7 @@ export default class Item extends Component {
 				<span className = 'going'> Going: { this.props.going.length } </span>&nbsp;
 				<GoingButtonContainer
 					item = { this.props.item }
-					user = { this.props.user }
+					username = { this.props.username }
 					amGoing = { this.props.amGoing } />
 			</li>
 		)
@@ -19,5 +19,5 @@ Item.propTypes = {
 	item: PropTypes.object.isRequired,
 	going: PropTypes.array.isRequired,
 	amGoing: PropTypes.bool.isRequired,
-	user: PropTypes.string.isRequired
+	username: PropTypes.string.isRequired
 }

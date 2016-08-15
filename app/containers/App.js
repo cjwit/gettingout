@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { invalidateListings, fetchListingsIfNeeded, requestListingsAPI, changeLocation, getSelectedVenues } from '../actions'
 import Listings from '../components/Listings'
 import InputSubmit from '../components/InputSubmit'
+import LoginContainer from './LoginContainer'
 
 class App extends Component {
 	componentDidMount() {
@@ -25,6 +26,7 @@ class App extends Component {
 		const { location, listings, isFetching, lastUpdated, selected, user } = this.props
 		return (
 			<div>
+				<LoginContainer user = { this.props.user } />
 				<h1>{ location }</h1>
 				<InputSubmit name = 'locationInput'
 						submitFunction = { this.handleChange }
@@ -45,7 +47,7 @@ class App extends Component {
 				}
 				{ listings.length > 0 &&
 					<div style = {{ opacity: isFetching ? 0.5 : 1 }} >
-						<Listings listings = { listings } selected = { selected } user = { user } />
+						<Listings listings = { listings } selected = { selected } username = { user.username } />
 					</div>
 				}
 			</div>

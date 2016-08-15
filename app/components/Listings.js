@@ -16,7 +16,7 @@ export default class Listings extends Component {
 				item = { listing }
 				going = { going }
 				amGoing = { going.indexOf(this.props.user) !== -1 }
-				user = { this.props.user } />)
+				username = { this.props.username } />)
 		})
 
 		return (
@@ -30,5 +30,5 @@ export default class Listings extends Component {
 Listings.propTypes = {
 	listings: PropTypes.array.isRequired,
 	selected: PropTypes.object.isRequired,
-	user: PropTypes.string.isRequired
+	username: PropTypes.string.isRequired
 }

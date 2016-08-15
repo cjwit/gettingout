@@ -3,7 +3,7 @@ import React, { PropTypes, Component } from 'react'
 export default class GoingButton extends Component {
 	updateSelected = (e) => {
 		e.preventDefault();
-		this.props.updateSelected(this.props.item.yelpID, this.props.user, this.props.amGoing)
+		this.props.updateSelected(this.props.item.yelpID, this.props.username, this.props.amGoing)
 	}
 
 	render() {
@@ -20,5 +20,5 @@ export default class GoingButton extends Component {
 GoingButton.propTypes = {
 	amGoing: PropTypes.bool.isRequired,
 	item: PropTypes.object.isRequired,
-	user: PropTypes.string.isRequired
+	username: PropTypes.string.isRequired
 }

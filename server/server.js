@@ -35,12 +35,18 @@ app.use('/yelp', yelpController);
 app.use('/venues', venueController);
 app.use("/user", userController);
 
+// passport config
+var User = require('./data/user.js');
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 // passport requests
 app.post('/register', function(req, res) {
 	console.log('register called', req.body);
 	User.register(new User({ username: req.body.username }), req.body.password, function(err, user) {
 		if (err) {
-			res.json({ message: 'error' });
+			res.send(err);
 		} else {
 			res.json({ message: 'user created' });
 		}

@@ -4,8 +4,8 @@ import GoingButton from '../components/GoingButton'
 
 const mapDispatchToProps = (dispatch, ownProps) => {
 	return {
-		updateSelected: (yelpID, user, going) => {
-			dispatch(updateSelected(yelpID, user, going))
+		updateSelected: (yelpID, username, going) => {
+			dispatch(updateSelected(yelpID, username, going))
 		}
 	}
 }

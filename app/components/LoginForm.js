@@ -1,12 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import ErrorMessage from './ErrorMessage.jsx';
-var authActions = require('../actions/authActions.js');
+// import ErrorMessage from './ErrorMessage.js';
 
 export default class LoginForm extends Component {
-	static propTypes = {
-		login: PropTypes.object.isRequired
-	}
-
 	state = {
 		username: "",
 		password: ""
@@ -30,13 +25,15 @@ export default class LoginForm extends Component {
 	createAccount = (e) => {
 		e.preventDefault();
 		const user = this.state;
-		authActions.addUser(user);
+		console.log('clicked createAccount, state:', user)
+		this.props.register(user);
 	}
 
-	login = (e) => {
+	clickLogin = (e) => {
 		e.preventDefault();
 		const user = this.state;
-		authActions.login(user);
+		console.log('clicked login, state:', user)
+		this.props.login(user);
 	}
 
 	handleInputChange = (e) => {
@@ -46,7 +43,6 @@ export default class LoginForm extends Component {
 		const state = this.state;
 		state[name] = value;
 		this.setState(state);
-
 		this.validateForm();
 	}
 
@@ -67,10 +63,13 @@ export default class LoginForm extends Component {
 	}
 
     render() {
+		// add error message support
 		let err = null;
-		if (this.props.login.error !== null) {
-			err = <ErrorMessage message = { this.props.login.error } />
+		/*
+		if (this.props.user.error !== null) {
+			err = <ErrorMessage message = { this.props.user.error } />
 		}
+		*/
 
 		return (
 			<div className="container">
@@ -82,7 +81,7 @@ export default class LoginForm extends Component {
 						</div>
 					</div>
 		            <div id="signinForm" className="col-sm-6 col-sm-offset-3 loginForm">
-		                <form onSubmit= { this.login } >
+		                <form onSubmit= { this.clickLogin } >
 		                    <div className="form-group">
 		                        <label htmlFor="username">Username:</label>
 		                        <input type="text"
@@ -132,4 +131,8 @@ export default class LoginForm extends Component {
 		    </div>
         )
     }
+}
+
+LoginForm.propTypes = {
+	user: PropTypes.object.isRequired
 }
