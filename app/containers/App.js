@@ -1,6 +1,11 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { invalidateListings, fetchListingsIfNeeded, requestListingsAPI, changeLocation, getSelectedVenues } from '../actions'
+import { invalidateListings,
+		 fetchListingsIfNeeded,
+		 requestListingsAPI,
+		 changeLocation,
+		 getSelectedVenues,
+	 	 getUser } from '../actions'
 import Listings from '../components/Listings'
 import InputSubmit from '../components/InputSubmit'
 import LoginContainer from './LoginContainer'
@@ -8,6 +13,7 @@ import LoginContainer from './LoginContainer'
 class App extends Component {
 	componentDidMount() {
 		this.props.dispatch(getSelectedVenues())
+		this.props.dispatch(getUser())
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -23,10 +29,10 @@ class App extends Component {
 	}
 
 	render() {
-		const { location, listings, isFetching, lastUpdated, selected, user } = this.props
+		const { location, listings, isFetching, lastUpdated, selected, username, userMessage } = this.props
 		return (
 			<div>
-				<LoginContainer user = { this.props.user } />
+				<LoginContainer username = { this.props.username } userMessage = { this.props.userMessage } userFetching = { this.props.userFetching }/>
 				<h1>{ location }</h1>
 				<InputSubmit name = 'locationInput'
 						submitFunction = { this.handleChange }
@@ -47,7 +53,7 @@ class App extends Component {
 				}
 				{ listings.length > 0 &&
 					<div style = {{ opacity: isFetching ? 0.5 : 1 }} >
-						<Listings listings = { listings } selected = { selected } username = { user.username } />
+						<Listings listings = { listings } selected = { selected } username = { username } />
 					</div>
 				}
 			</div>
@@ -70,7 +76,9 @@ function mapStateToProps(state) {
 		  listings = state.listings.items,
 		  isFetching = state.listings.isFetching,
 		  lastUpdated = state.listings.lastUpdated,
-		  user = state.user,
+		  username = state.user.username,
+		  userMessage = state.user.userMessage,
+		  userFetching = state.user.isFetching,
 		  selected = state.selected;
 	// console.log(' -- props:', location, listings, isFetching, lastUpdated, selected)
 	return {
@@ -79,7 +87,9 @@ function mapStateToProps(state) {
 		isFetching,
 		lastUpdated,
 		selected,
-		user
+		username,
+		userMessage,
+		userFetching
 	}
 }
 

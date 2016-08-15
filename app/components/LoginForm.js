@@ -74,6 +74,7 @@ export default class LoginForm extends Component {
 		return (
 			<div className="container">
 		        <div className="row">
+					User: { this.props.username }, Message: { this.props.userMessage } { this.props.userFetching ? ', Fetching' : ', Done' }
 					<div className="col-sm-12 text-center">
 						<div className="btn-group" role="group" aria-label="...">
 							<button type="button" id="signinSelector" className="btn btn-default" onClick={ this.openSigninForm }>Sign In</button>
@@ -134,5 +135,7 @@ export default class LoginForm extends Component {
 }
 
 LoginForm.propTypes = {
-	user: PropTypes.object.isRequired
+	username: PropTypes.string.isRequired,
+	userMessage: PropTypes.string,
+	userFetching: PropTypes.bool.isRequired
 }

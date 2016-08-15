@@ -588,6 +588,12 @@ var LoginForm = function (_Component) {
 				_react2.default.createElement(
 					"div",
 					{ className: "row" },
+					"User: ",
+					this.props.username,
+					", Message: ",
+					this.props.userMessage,
+					" ",
+					this.props.userFetching ? ', Fetching' : ', Done',
 					_react2.default.createElement(
 						"div",
 						{ className: "col-sm-12 text-center" },
@@ -705,7 +711,9 @@ exports.default = LoginForm;
 
 
 LoginForm.propTypes = {
-	user: _react.PropTypes.object.isRequired
+	username: _react.PropTypes.string.isRequired,
+	userMessage: _react.PropTypes.string,
+	userFetching: _react.PropTypes.bool.isRequired
 };
 
 },{"react":273}],7:[function(require,module,exports){
@@ -737,7 +745,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var loggerMiddleware = (0, _reduxLogger2.default)();
 
 function configureStore(preloadedState) {
-	return (0, _redux.createStore)(_reducers2.default, (0, _redux.applyMiddleware)(_reduxThunk2.default, loggerMiddleware, _reduxApiMiddleware.apiMiddleware));
+	return (0, _redux.createStore)(_reducers2.default, (0, _redux.applyMiddleware)(_reduxThunk2.default, _reduxApiMiddleware.apiMiddleware, loggerMiddleware));
 }
 
 },{"./reducers":13,"redux":299,"redux-api-middleware":276,"redux-logger":292,"redux-thunk":293}],8:[function(require,module,exports){
@@ -800,6 +808,7 @@ var App = function (_Component) {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
 			this.props.dispatch((0, _actions.getSelectedVenues)());
+			this.props.dispatch((0, _actions.getUser)());
 		}
 	}, {
 		key: 'componentWillReceiveProps',
@@ -821,12 +830,13 @@ var App = function (_Component) {
 			var isFetching = _props.isFetching;
 			var lastUpdated = _props.lastUpdated;
 			var selected = _props.selected;
-			var user = _props.user;
+			var username = _props.username;
+			var userMessage = _props.userMessage;
 
 			return _react2.default.createElement(
 				'div',
 				null,
-				_react2.default.createElement(_LoginContainer2.default, { user: this.props.user }),
+				_react2.default.createElement(_LoginContainer2.default, { username: this.props.username, userMessage: this.props.userMessage, userFetching: this.props.userFetching }),
 				_react2.default.createElement(
 					'h1',
 					null,
@@ -860,7 +870,7 @@ var App = function (_Component) {
 				listings.length > 0 && _react2.default.createElement(
 					'div',
 					{ style: { opacity: isFetching ? 0.5 : 1 } },
-					_react2.default.createElement(_Listings2.default, { listings: listings, selected: selected, username: user.username })
+					_react2.default.createElement(_Listings2.default, { listings: listings, selected: selected, username: username })
 				)
 			);
 		}
@@ -884,7 +894,9 @@ function mapStateToProps(state) {
 	    listings = state.listings.items,
 	    isFetching = state.listings.isFetching,
 	    lastUpdated = state.listings.lastUpdated,
-	    user = state.user,
+	    username = state.user.username,
+	    userMessage = state.user.userMessage,
+	    userFetching = state.user.isFetching,
 	    selected = state.selected;
 	// console.log(' -- props:', location, listings, isFetching, lastUpdated, selected)
 	return {
@@ -893,7 +905,9 @@ function mapStateToProps(state) {
 		isFetching: isFetching,
 		lastUpdated: lastUpdated,
 		selected: selected,
-		user: user
+		username: username,
+		userMessage: userMessage,
+		userFetching: userFetching
 	};
 }
 
@@ -1071,7 +1085,8 @@ var initialState = {
 	location: '',
 	user: {
 		isFetching: false,
-		username: ""
+		username: "",
+		message: null
 	},
 	listings: {
 		isFetching: false,
@@ -1095,13 +1110,15 @@ function user(state, action) {
 
 		case _actions.GET_USER_RECEIVE:
 		case _actions.LOGIN_SUCCESS:
-			return Object.assign({}, state, { isFetching: false, username: action.payload });
-
 		case _actions.REGISTER_USER_SUCCESS:
-			return Object.assign({}, state, { isFetching: false });
-
 		case _actions.LOGOUT_SUCCESS:
-			return Object.assign({}, state, { isFetching: false, username: "" });
+			console.log('received user info', action.payload);
+			var _user = {
+				username: action.payload.username,
+				message: action.payload.message,
+				isFetching: false
+			};
+			return _user;
 
 		case _actions.GET_USER_FAILURE:
 		case _actions.LOGIN_FAILURE:

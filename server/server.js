@@ -44,25 +44,26 @@ passport.deserializeUser(User.deserializeUser());
 // passport requests
 app.post('/register', function(req, res) {
 	console.log('register called', req.body);
-	User.register(new User({ username: req.body.username }), req.body.password, function(err, user) {
-		if (err) {
-			res.send(err);
-		} else {
-			res.json({ message: 'user created' });
-		}
+	User.register(new User({ username: req.body.username }), req.body.password, (err, user) => {
+		const result = { username: '', message: null }
+		if (err) { result.message = err.message }
+		else { result.username = user.username }
+		res.json(result)
 	});
 });
 
 app.get('/auth', function(req, res) {
 	console.log('checking login status')
-	if (req.user) {
-		console.log('  -- user:', req.user.username, '\n');
-		res.json(req.user.username);
+	const result = { username: '', message: null }
+	if (!req.user) {
+		console.log('  -- not logged in\n');
+		result.message = 'Not logged in'
 	}
 	else {
-		console.log('  -- not logged in\n');
-		res.send(false);
+		console.log('  -- user:', req.user.username, '\n');
+		result.username = user.username
 	}
+	res.json(result)
 })
 
 app.post('/login',
@@ -70,13 +71,27 @@ app.post('/login',
 	function(req, res) {
 		console.log('login called');
 		console.log('  -- user from authenticate:', req.user.username, '\n');
-		res.json(req.user.username);
+		const result = { username: '', message: null }
+		if (!req.user) {
+			console.log('  -- not logged in\n');
+			result.message = 'Login failed'
+		}
+		else {
+			console.log('  -- user:', req.user.username, '\n');
+			result.username = user.username
+		}
+		res.json(result);
 	});
 
 app.get('/logout', function(req, res) {
 	console.log('logged out\n');
 	req.logout();
-	res.send(false);
+	const result = { username: '', message: null }
+	if (err) {
+		console.log('  -- logout failed\n');
+		result.message = 'Logout failed'
+	}
+	res.send(result);
 });
 
 // setup app

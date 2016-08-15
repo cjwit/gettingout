@@ -12,7 +12,8 @@ const initialState = {
 	location: '',
 	user: {
 		isFetching: false,
-		username: ""
+		username: "",
+		message: null
 	},
 	listings: {
 		isFetching: false,
@@ -36,13 +37,15 @@ function user(state, action) {
 
 		case GET_USER_RECEIVE:
 		case LOGIN_SUCCESS:
-			return Object.assign({}, state, { isFetching: false, username: action.payload })
-
 		case REGISTER_USER_SUCCESS:
-			return Object.assign({}, state, { isFetching: false })
-
 		case LOGOUT_SUCCESS:
-			return Object.assign({}, state, { isFetching: false, username: "" })
+			console.log('received user info', action.payload)
+			const user = {
+				username: action.payload.username,
+				message: action.payload.message,
+				isFetching: false
+			}
+			return user
 
 		case GET_USER_FAILURE:
 		case LOGIN_FAILURE:
