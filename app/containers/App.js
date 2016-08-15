@@ -32,7 +32,7 @@ class App extends Component {
 		const { location, listings, isFetching, lastUpdated, selected, username, userMessage } = this.props
 		return (
 			<div>
-				<LoginContainer username = { this.props.username } userMessage = { this.props.userMessage } userFetching = { this.props.userFetching }/>
+				<LoginContainer />
 				<h1>{ location }</h1>
 				<InputSubmit name = 'locationInput'
 						submitFunction = { this.handleChange }
@@ -77,8 +77,6 @@ function mapStateToProps(state) {
 		  isFetching = state.listings.isFetching,
 		  lastUpdated = state.listings.lastUpdated,
 		  username = state.user.username,
-		  userMessage = state.user.userMessage,
-		  userFetching = state.user.isFetching,
 		  selected = state.selected;
 	// console.log(' -- props:', location, listings, isFetching, lastUpdated, selected)
 	return {
@@ -87,9 +85,7 @@ function mapStateToProps(state) {
 		isFetching,
 		lastUpdated,
 		selected,
-		username,
-		userMessage,
-		userFetching
+		username
 	}
 }
 

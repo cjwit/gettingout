@@ -78,7 +78,7 @@ app.post('/login',
 		}
 		else {
 			console.log('  -- user:', req.user.username, '\n');
-			result.username = user.username
+			result.username = req.user.username
 		}
 		res.json(result);
 	});

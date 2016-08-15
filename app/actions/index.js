@@ -86,7 +86,8 @@ export function login(user) {
 	return {
 		[CALL_API]: {
 			endpoint: `/login`,
-			method: 'GET',
+			headers: { 'Content-Type': 'application/json' },
+			method: 'POST',
 			body: JSON.stringify(user),
 			types: [ LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE ]
 		}

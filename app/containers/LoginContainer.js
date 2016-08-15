@@ -19,8 +19,22 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 	}
 }
 
+function mapStateToProps(state) {
+	// console.log('### mapStateToProps')
+	// console.log(' -- state:', state)
+	const username = state.user.username,
+		  userMessage = state.user.message,
+		  userFetching = state.user.isFetching;
+
+	return {
+		username,
+		userMessage,
+		userFetching
+	}
+}
+
 const LoginContainer = connect(
-	null,
+	mapStateToProps,
 	mapDispatchToProps
 )(LoginForm)
 

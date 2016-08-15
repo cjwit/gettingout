@@ -96,7 +96,8 @@ var LOGIN_FAILURE = exports.LOGIN_FAILURE = 'LOGIN_FAILURE';
 function login(user) {
 	return _defineProperty({}, _reduxApiMiddleware.CALL_API, {
 		endpoint: '/login',
-		method: 'GET',
+		headers: { 'Content-Type': 'application/json' },
+		method: 'POST',
 		body: JSON.stringify(user),
 		types: [LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE]
 	});
@@ -836,7 +837,7 @@ var App = function (_Component) {
 			return _react2.default.createElement(
 				'div',
 				null,
-				_react2.default.createElement(_LoginContainer2.default, { username: this.props.username, userMessage: this.props.userMessage, userFetching: this.props.userFetching }),
+				_react2.default.createElement(_LoginContainer2.default, null),
 				_react2.default.createElement(
 					'h1',
 					null,
@@ -895,8 +896,6 @@ function mapStateToProps(state) {
 	    isFetching = state.listings.isFetching,
 	    lastUpdated = state.listings.lastUpdated,
 	    username = state.user.username,
-	    userMessage = state.user.userMessage,
-	    userFetching = state.user.isFetching,
 	    selected = state.selected;
 	// console.log(' -- props:', location, listings, isFetching, lastUpdated, selected)
 	return {
@@ -905,9 +904,7 @@ function mapStateToProps(state) {
 		isFetching: isFetching,
 		lastUpdated: lastUpdated,
 		selected: selected,
-		username: username,
-		userMessage: userMessage,
-		userFetching: userFetching
+		username: username
 	};
 }
 
@@ -976,7 +973,21 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
 	};
 };
 
-var LoginContainer = (0, _reactRedux.connect)(null, mapDispatchToProps)(_LoginForm2.default);
+function mapStateToProps(state) {
+	// console.log('### mapStateToProps')
+	// console.log(' -- state:', state)
+	var username = state.user.username,
+	    userMessage = state.user.message,
+	    userFetching = state.user.isFetching;
+
+	return {
+		username: username,
+		userMessage: userMessage,
+		userFetching: userFetching
+	};
+}
+
+var LoginContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_LoginForm2.default);
 
 exports.default = LoginContainer;
 
@@ -1113,12 +1124,7 @@ function user(state, action) {
 		case _actions.REGISTER_USER_SUCCESS:
 		case _actions.LOGOUT_SUCCESS:
 			console.log('received user info', action.payload);
-			var _user = {
-				username: action.payload.username,
-				message: action.payload.message,
-				isFetching: false
-			};
-			return _user;
+			return Object.assign({}, action.payload, { isFetching: false });
 
 		case _actions.GET_USER_FAILURE:
 		case _actions.LOGIN_FAILURE:

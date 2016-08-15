@@ -40,12 +40,7 @@ function user(state, action) {
 		case REGISTER_USER_SUCCESS:
 		case LOGOUT_SUCCESS:
 			console.log('received user info', action.payload)
-			const user = {
-				username: action.payload.username,
-				message: action.payload.message,
-				isFetching: false
-			}
-			return user
+			return Object.assign({}, action.payload, { isFetching: false })
 
 		case GET_USER_FAILURE:
 		case LOGIN_FAILURE:
