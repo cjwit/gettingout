@@ -19,7 +19,6 @@ function getVenues(req, res) {
 // called if no venue exists within the same name
 function addVenue(id, user, res) {
     var venue = new Venue(_.extend({}, { yelpID: id, going: [ user ] }));
-	console.log('addVenue called', venue)
     venue.save(function (err) {
         if (err) res.send(err);
         getVenues(null, res);
@@ -34,83 +33,62 @@ function deleteVenue(id, res) {
     });
 }
 
-function addUser(id, user) {
-
+function addUser(id, current, user, res) {
+	const query = { yelpID: id }
+	const update = { $set: { going: current.concat(user) }}
+	Venue.update(query, update, (err) => {
+		if (err) res.send(err);
+		getVenues(null, res)
+	})
 }
 
-function removeUser(id, user) {
-	// if, after removed, venue has no guests, deleteVenue
-
+function removeUser(id, current, user, res) {
+	const query = { yelpID: id }
+	const index = current.indexOf(user)
+	current.splice(index, 1)
+	if (current.length === 0) {
+		Venue.remove(query, (err) => {
+			if (err) res.send(err);
+			getVenues(null, res);
+		})
+	} else {
+		const update = { $set: { going: current }}
+		Venue.update(query, update, (err) => {
+			if (err) res.send(err);
+			getVenues(null, res)
+		})
+	}
 }
 
 function updateSelected(req, res) {
-	console.log('updateSelected called');
     var id = req.params.id;
     var user = req.body.user;
 	var going = !!req.body.going;
+	var currentGoingArray;
 
-	console.log(' -- info');
-	console.log(id, user, going);
 	Venue.find((err, venues) => {
 		if (err) res.send(err);
-		console.log(venues);
 		var selectedIDs = [];
-		venues.forEach((v) => selectedIDs.push(v.yelpID))
+		venues.forEach((v) => {
+			selectedIDs.push(v.yelpID)
+			if (v.yelpID == id) {
+				currentGoingArray = v.going;
+			}
+		})
+
+		// no venue with this id is in selected, call function to add one
 		if (selectedIDs.indexOf(id) == -1) {
-			console.log('about to call addVenue')
 			addVenue(id, user, res)
+
+		// found a venue with this id, call function to update it
+		} else {
+			if (currentGoingArray.indexOf(user) == -1) {
+				addUser(id, currentGoingArray, user, res);
+			} else {
+				removeUser(id, currentGoingArray, user, res);
+			}
 		}
-		// check ids...
-		// if venue is in list, addUser or removeUser
-		// if venue does not exist, addVenue with user
-
-
 	})
-
-	// check current venues for a matching id
-	// if there is one:
-		// update the going list (find a good way to send this within the body)
-
-/* from reducer logic
-
-let inArray = false
-let goingState = state.map((listing) => listing)
-goingState.forEach((listing) => {
-	if (listing.yelpID === action.yelpID) {
-		listing.going++
-		inArray = true
-	}
-});
-
-// add item if it was not previously in selected
-if (!inArray) {
-	goingState.push({ yelpID: action.yelpID, going: 1 })
-}
-
-*/
-
-/*
-    var query = { _id: id },
-        update = { $set: {
-            name: info.name,
-            location: info.location,
-            description: info.description,
-            date: new Date(info.date),
-            tags: info.tags,
-            contactName: info.contactName,
-            contactEmail: info.contactEmail,
-            edited: info.edited,
-            editDate: info.editDate
-        }};
-    Event.update(query, update, function (err, updated) {
-        if (err) res.send(err);
-        else res.json(updated);
-    });
-*/
-
-	// if the list drops to 0, call deleteVenue(id, res)
-	// if not in the list, call addVenue(req, res)
-
 }
 
 

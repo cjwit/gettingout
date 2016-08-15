@@ -255,6 +255,7 @@ var Item = function (_Component) {
 		}, _this.updateSelected = function (e) {
 			e.preventDefault();
 			_this.props.updateSelected(_this.props.item.yelpID, _this.props.user, _this.state.amGoing);
+			_this.setState({ amGoing: !_this.state.amGoing });
 		}, _temp), _possibleConstructorReturn(_this, _ret);
 	}
 
@@ -263,8 +264,8 @@ var Item = function (_Component) {
 		value: function render() {
 			var button = _react2.default.createElement(
 				'button',
-				{ className: 'btn btn-default btn-xs', onClick: this.updateSelected },
-				'Go!'
+				{ className: this.state.amGoing ? 'btn btn-default btn-xs btn-danger' : 'btn btn-default btn-xs btn-primary', onClick: this.updateSelected },
+				this.state.amGoing ? "I'm backing out" : "I'm going tonight"
 			);
 
 			return _react2.default.createElement(
@@ -335,7 +336,6 @@ var Listings = function (_Component) {
 		value: function render() {
 			var _this2 = this;
 
-			console.log(this.props.selected);
 			var ItemContainers = this.props.listings.map(function (listing, i) {
 				var going = [];
 				_this2.props.selected.venues.map(function (venue) {

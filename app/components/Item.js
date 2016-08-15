@@ -8,11 +8,12 @@ export default class Item extends Component {
 	updateSelected = (e) => {
 		e.preventDefault();
 		this.props.updateSelected(this.props.item.yelpID, this.props.user, this.state.amGoing)
+		this.setState({ amGoing: !this.state.amGoing })
 	}
 
 	render() {
-		const button = <button className = 'btn btn-default btn-xs' onClick = { this.updateSelected }>
-			Go!
+		const button = <button className = { this.state.amGoing ? 'btn btn-default btn-xs btn-danger' : 'btn btn-default btn-xs btn-primary' } onClick = { this.updateSelected }>
+			{ this.state.amGoing ? "I'm backing out" : "I'm going tonight" }
 		</button>
 
 		return (

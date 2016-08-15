@@ -3,7 +3,6 @@ import ItemContainer from '../containers/ItemContainer.js'
 
 export default class Listings extends Component {
 	render() {
-		console.log(this.props.selected);
 		const ItemContainers = this.props.listings.map((listing, i) => {
 			let going = []
 			this.props.selected.venues.map((venue) => {
