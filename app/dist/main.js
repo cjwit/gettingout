@@ -4,12 +4,16 @@
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.GET_SELECTED_FAILURE = exports.GET_SELECTED_RECEIVE = exports.GET_SELECTED_REQUEST = exports.UPDATE_FAILURE = exports.UPDATE_RECEIVE = exports.UPDATE_REQUEST = exports.LISTINGS_FAILURE = exports.LISTINGS_RECEIVE = exports.LISTINGS_REQUEST = exports.LISTINGS_INVALIDATE = exports.CHANGE_LOCATION = undefined;
+exports.REGISTER_USER_FAILURE = exports.REGISTER_USER_SUCCESS = exports.REGISTER_USER_REQUEST = exports.LOGOUT_FAILURE = exports.LOGOUT_SUCCESS = exports.LOGOUT_REQUEST = exports.LOGIN_FAILURE = exports.LOGIN_SUCCESS = exports.LOGIN_REQUEST = exports.GET_USER_FAILURE = exports.GET_USER_RECEIVE = exports.GET_USER_REQUEST = exports.GET_SELECTED_FAILURE = exports.GET_SELECTED_RECEIVE = exports.GET_SELECTED_REQUEST = exports.UPDATE_FAILURE = exports.UPDATE_RECEIVE = exports.UPDATE_REQUEST = exports.LISTINGS_FAILURE = exports.LISTINGS_RECEIVE = exports.LISTINGS_REQUEST = exports.LISTINGS_INVALIDATE = exports.CHANGE_LOCATION = undefined;
 exports.changeLocation = changeLocation;
 exports.invalidateListings = invalidateListings;
 exports.requestListingsAPI = requestListingsAPI;
 exports.updateSelected = updateSelected;
 exports.getSelectedVenues = getSelectedVenues;
+exports.getUser = getUser;
+exports.login = login;
+exports.logout = logout;
+exports.register = register;
 
 var _reduxApiMiddleware = require('redux-api-middleware');
 
@@ -47,22 +51,16 @@ function requestListingsAPI(location) {
 	});
 }
 
-// EDIT GOING... updateSelected(yelpID, user, going)
-// use CALL_API with [CALL_API].body set to the id, user, and true/false (adding/subtracting)
-// reducers should update state with the listing
 var UPDATE_REQUEST = exports.UPDATE_REQUEST = 'UPDATE_REQUEST';
 var UPDATE_RECEIVE = exports.UPDATE_RECEIVE = 'UPDATE_RECEIVE';
 var UPDATE_FAILURE = exports.UPDATE_FAILURE = 'UPDATE_FAILURE';
 
 function updateSelected(yelpID, user, going) {
-	console.log('updateSelected called', yelpID, user, going);
-	var body = JSON.stringify({ user: user, going: going });
-	console.log(' -- body:', body);
 	return _defineProperty({}, _reduxApiMiddleware.CALL_API, {
 		endpoint: '/venues/' + yelpID,
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
-		body: body,
+		body: JSON.stringify({ user: user, going: going }),
 		types: [UPDATE_REQUEST, UPDATE_RECEIVE, UPDATE_FAILURE]
 	});
 }
@@ -76,6 +74,56 @@ function getSelectedVenues() {
 		endpoint: '/venues',
 		method: 'GET',
 		types: [GET_SELECTED_REQUEST, GET_SELECTED_RECEIVE, GET_SELECTED_FAILURE]
+	});
+}
+
+var GET_USER_REQUEST = exports.GET_USER_REQUEST = 'GET_USER_REQUEST';
+var GET_USER_RECEIVE = exports.GET_USER_RECEIVE = 'GET_USER_RECEIVE';
+var GET_USER_FAILURE = exports.GET_USER_FAILURE = 'GET_USER_FAILURE';
+
+function getUser() {
+	return _defineProperty({}, _reduxApiMiddleware.CALL_API, {
+		endpoint: '/auth',
+		method: 'GET',
+		types: [GET_USER_REQUEST, GET_USER_RECEIVE, GET_USER_FAILURE]
+	});
+}
+
+var LOGIN_REQUEST = exports.LOGIN_REQUEST = 'LOGIN_REQUEST';
+var LOGIN_SUCCESS = exports.LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+var LOGIN_FAILURE = exports.LOGIN_FAILURE = 'LOGIN_FAILURE';
+
+function login(user) {
+	return _defineProperty({}, _reduxApiMiddleware.CALL_API, {
+		endpoint: '/login',
+		method: 'GET',
+		body: JSON.stringify(user),
+		types: [LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE]
+	});
+}
+
+var LOGOUT_REQUEST = exports.LOGOUT_REQUEST = 'LOGOUT_REQUEST';
+var LOGOUT_SUCCESS = exports.LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
+var LOGOUT_FAILURE = exports.LOGOUT_FAILURE = 'LOGOUT_FAILURE';
+
+function logout() {
+	return _defineProperty({}, _reduxApiMiddleware.CALL_API, {
+		endpoint: '/login',
+		method: 'GET',
+		types: [LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE]
+	});
+}
+
+var REGISTER_USER_REQUEST = exports.REGISTER_USER_REQUEST = 'REGISTER_USER_REQUEST';
+var REGISTER_USER_SUCCESS = exports.REGISTER_USER_SUCCESS = 'REGISTER_USER_SUCCESS';
+var REGISTER_USER_FAILURE = exports.REGISTER_USER_FAILURE = 'REGISTER_USER_FAILURE';
+
+function register(user) {
+	return _defineProperty({}, _reduxApiMiddleware.CALL_API, {
+		endpoint: '/register',
+		method: 'POST',
+		body: JSON.stringify(user),
+		types: [REGISTER_USER_REQUEST, REGISTER_USER_SUCCESS, REGISTER_USER_FAILURE]
 	});
 }
 
@@ -744,7 +792,10 @@ var _actions = require('../actions');
 
 var initialState = {
 	location: '',
-	user: 'chris',
+	user: {
+		isFetching: false,
+		username: ""
+	},
 	listings: {
 		isFetching: false,
 		didInvalidate: false,
@@ -756,6 +807,32 @@ var initialState = {
 		venues: []
 	}
 };
+
+function user(state, action) {
+	switch (action.type) {
+		case _actions.GET_USER_REQUEST:
+		case _actions.LOGIN_REQUEST:
+		case _actions.LOGOUT_REQUEST:
+		case _actions.REGISTER_USER_REQUEST:
+			return Object.assign({}, state, { isFetching: true });
+
+		case _actions.GET_USER_RECEIVE:
+		case _actions.LOGIN_SUCCESS:
+			return Object.assign({}, state, { isFetching: false, username: action.payload });
+
+		case _actions.REGISTER_USER_SUCCESS:
+			return Object.assign({}, state, { isFetching: false });
+
+		case _actions.LOGOUT_SUCCESS:
+			return Object.assign({}, state, { isFetching: false, username: "" });
+
+		case _actions.GET_USER_FAILURE:
+		case _actions.LOGIN_FAILURE:
+		case _actions.REGISTER_USER_FAILURE:
+		case _actions.LOGOUT_FAILURE:
+			return state;
+	}
+}
 
 function listing(state, action) {
 	switch (action.type) {
@@ -811,7 +888,6 @@ function reducer() {
 			});
 
 		case _actions.CHANGE_LOCATION:
-			console.log('from reducer, location:', action.location);
 			return Object.assign({}, state, {
 				location: action.location
 			});
@@ -825,6 +901,23 @@ function reducer() {
 			return Object.assign({}, state, {
 				selected: selected(state.selected, action)
 			});
+
+		case _actions.GET_USER_REQUEST:
+		case _actions.GET_USER_RECEIVE:
+		case _actions.GET_USER_FAILURE:
+		case _actions.LOGIN_REQUEST:
+		case _actions.LOGIN_SUCCESS:
+		case _actions.LOGIN_FAILURE:
+		case _actions.REGISTER_USER_REQUEST:
+		case _actions.REGISTER_USER_SUCCESS:
+		case _actions.REGISTER_USER_FAILURE:
+		case _actions.LOGOUT_REQUEST:
+		case _actions.LOGOUT_SUCCESS:
+		case _actions.LOGOUT_FAILURE:
+			return Object.assign({}, state, {
+				user: user(state.user, action)
+			});
+
 		default:
 			return state;
 	}

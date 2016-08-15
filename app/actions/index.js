@@ -34,23 +34,17 @@ export function requestListingsAPI(location) {
 	}
 }
 
-// EDIT GOING... updateSelected(yelpID, user, going)
-// use CALL_API with [CALL_API].body set to the id, user, and true/false (adding/subtracting)
-// reducers should update state with the listing
 export const UPDATE_REQUEST = 'UPDATE_REQUEST'
 export const UPDATE_RECEIVE = 'UPDATE_RECEIVE'
 export const UPDATE_FAILURE = 'UPDATE_FAILURE'
 
 export function updateSelected(yelpID, user, going) {
-	console.log('updateSelected called', yelpID, user, going)
-	const body = JSON.stringify({ user, going })
-	console.log(' -- body:', body)
 	return {
 		[CALL_API]: {
 			endpoint: `/venues/${yelpID}`,
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: body,
+			body: JSON.stringify({ user, going }),
 			types: [ UPDATE_REQUEST, UPDATE_RECEIVE, UPDATE_FAILURE ]
 		}
 	}
@@ -66,6 +60,64 @@ export function getSelectedVenues() {
 			endpoint: `/venues`,
 			method: 'GET',
 			types: [ GET_SELECTED_REQUEST, GET_SELECTED_RECEIVE, GET_SELECTED_FAILURE ]
+		}
+	}
+}
+
+export const GET_USER_REQUEST = 'GET_USER_REQUEST'
+export const GET_USER_RECEIVE = 'GET_USER_RECEIVE'
+export const GET_USER_FAILURE = 'GET_USER_FAILURE'
+
+export function getUser() {
+	return {
+		[CALL_API]: {
+			endpoint: `/auth`,
+			method: 'GET',
+			types: [ GET_USER_REQUEST, GET_USER_RECEIVE, GET_USER_FAILURE ]
+		}
+	}
+}
+
+export const LOGIN_REQUEST = 'LOGIN_REQUEST'
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
+export const LOGIN_FAILURE = 'LOGIN_FAILURE'
+
+export function login(user) {
+	return {
+		[CALL_API]: {
+			endpoint: `/login`,
+			method: 'GET',
+			body: JSON.stringify(user),
+			types: [ LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE ]
+		}
+	}
+}
+
+export const LOGOUT_REQUEST = 'LOGOUT_REQUEST'
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
+export const LOGOUT_FAILURE = 'LOGOUT_FAILURE'
+
+export function logout() {
+	return {
+		[CALL_API]: {
+			endpoint: `/login`,
+			method: 'GET',
+			types: [ LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE ]
+		}
+	}
+}
+
+export const REGISTER_USER_REQUEST = 'REGISTER_USER_REQUEST'
+export const REGISTER_USER_SUCCESS = 'REGISTER_USER_SUCCESS'
+export const REGISTER_USER_FAILURE = 'REGISTER_USER_FAILURE'
+
+export function register(user) {
+	return {
+		[CALL_API]: {
+			endpoint: `/register`,
+			method: 'POST',
+			body: JSON.stringify(user),
+			types: [ REGISTER_USER_REQUEST, REGISTER_USER_SUCCESS, REGISTER_USER_FAILURE ]
 		}
 	}
 }

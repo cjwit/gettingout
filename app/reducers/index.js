@@ -2,11 +2,18 @@ import { combineReducers } from 'redux'
 import { LISTINGS_REQUEST, LISTINGS_RECEIVE, LISTINGS_INVALIDATE, LISTINGS_FAILURE,
 		 CHANGE_LOCATION,
 		 UPDATE_REQUEST, UPDATE_RECEIVE, UPDATE_FAILURE,
-		 GET_SELECTED_REQUEST, GET_SELECTED_RECEIVE, GET_SELECTED_FAILURE } from '../actions'
+		 GET_SELECTED_REQUEST, GET_SELECTED_RECEIVE, GET_SELECTED_FAILURE,
+		 GET_USER_REQUEST, GET_USER_RECEIVE, GET_USER_FAILURE,
+	 	 LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE,
+	 	 LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE,
+	 	 REGISTER_USER_REQUEST, REGISTER_USER_SUCCESS, REGISTER_USER_FAILURE } from '../actions'
 
 const initialState = {
 	location: '',
-	user: 'chris',
+	user: {
+		isFetching: false,
+		username: ""
+	},
 	listings: {
 		isFetching: false,
 		didInvalidate: false,
@@ -16,6 +23,32 @@ const initialState = {
 	selected: {
 		isFetching: false,
 		venues: []
+	}
+}
+
+function user(state, action) {
+	switch(action.type) {
+		case GET_USER_REQUEST:
+		case LOGIN_REQUEST:
+		case LOGOUT_REQUEST:
+		case REGISTER_USER_REQUEST:
+			return Object.assign({}, state, { isFetching: true })
+
+		case GET_USER_RECEIVE:
+		case LOGIN_SUCCESS:
+			return Object.assign({}, state, { isFetching: false, username: action.payload })
+
+		case REGISTER_USER_SUCCESS:
+			return Object.assign({}, state, { isFetching: false })
+
+		case LOGOUT_SUCCESS:
+			return Object.assign({}, state, { isFetching: false, username: "" })
+
+		case GET_USER_FAILURE:
+		case LOGIN_FAILURE:
+		case REGISTER_USER_FAILURE:
+		case LOGOUT_FAILURE:
+			return state
 	}
 }
 
@@ -70,11 +103,10 @@ function reducer(state = initialState, action) {
 			})
 
 		case CHANGE_LOCATION:
-			console.log('from reducer, location:', action.location)
 			return Object.assign({}, state, {
 				location: action.location
 			})
-			
+
 		case UPDATE_REQUEST:
 		case UPDATE_RECEIVE:
 		case UPDATE_FAILURE:
@@ -84,6 +116,23 @@ function reducer(state = initialState, action) {
 			return Object.assign({}, state, {
 				selected: selected(state.selected, action)
 			})
+
+		case GET_USER_REQUEST:
+		case GET_USER_RECEIVE:
+		case GET_USER_FAILURE:
+		case LOGIN_REQUEST:
+		case LOGIN_SUCCESS:
+		case LOGIN_FAILURE:
+		case REGISTER_USER_REQUEST:
+		case REGISTER_USER_SUCCESS:
+		case REGISTER_USER_FAILURE:
+		case LOGOUT_REQUEST:
+		case LOGOUT_SUCCESS:
+		case LOGOUT_FAILURE:
+			return Object.assign({}, state, {
+				user: user(state.user, action)
+			})
+
 		default:
 			return state
 	}
