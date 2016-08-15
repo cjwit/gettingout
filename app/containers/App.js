@@ -8,16 +8,12 @@ class App extends Component {
 	componentDidMount() {
 		const { dispatch, location } = this.props
 		dispatch(getSelectedVenues())
-
-		// do not load anything at the outset
-		// dispatch(fetchListingsIfNeeded(selectedSubreddit))
 	}
 
 	componentWillReceiveProps(nextProps) {
-		console.log('### Receiving props')
+		// console.log('### Receiving props for App')
 		if (nextProps.location !== this.props.location) {
 			const { dispatch, location } = nextProps
-			console.log(' -- updating for', location)
 			dispatch(requestListingsAPI(location))
 		}
 	}
@@ -67,17 +63,15 @@ App.propTypes = {
 }
 
 function mapStateToProps(state) {
-	console.log('### mapStateToProps')
-	console.log(' -- state:')
-	console.log(state)
+	// console.log('### mapStateToProps')
+	// console.log(' -- state:', state)
 	const location = state.location,
 		  listings = state.listings.items,
 		  isFetching = state.listings.isFetching,
 		  lastUpdated = state.listings.lastUpdated,
 		  user = state.user,
 		  selected = state.selected;
-	console.log(' -- props')
-	console.log(location, listings, isFetching, lastUpdated, selected)
+	// console.log(' -- props:', location, listings, isFetching, lastUpdated, selected)
 	return {
 		location,
 		listings,

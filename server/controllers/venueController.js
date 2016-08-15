@@ -9,7 +9,7 @@ router.route('/').get(getVenues);
 // get venues: call on initial load
 // return all currently selected venues for state
 function getVenues(req, res) {
-	console.log('Getting venues')
+	console.log('getVenues called')
 	Venue.find(function (err, venues) {
         if (err) res.send(err);
         else res.json(venues);
@@ -34,10 +34,11 @@ function deleteVenue(id, res) {
 }
 
 function selectVenue(req, res) {
+	console.log('selectVenue called');
     var id = req.params.id;
     var info = req.body;
-	cnsole.log(' -- selectVenue called');
-	console.log(info); 									// { user, going }
+	console.log(' -- info'); 									// { user, going }
+	console.log(info);
 
 	// check current venues for a matching id
 	// if there is one:

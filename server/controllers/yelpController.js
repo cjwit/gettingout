@@ -36,7 +36,7 @@ var request_yelp = function(set_parameters, callback) {
 }
 
 function getYelpListings(req, res) {
-	console.log('Yelp api called')
+	console.log('getYelpListings called')
 	var location = req.params.location;
 
 	request_yelp({ location: location }, (err, result, body) => {

@@ -4,7 +4,7 @@
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.GET_SELECTED_FAILURE = exports.GET_SELECTED_RECEIVE = exports.GET_SELECTED_REQUEST = exports.UPDATE_FAILURE = exports.UPDATE_RECEIVE = exports.UPDATE_REQUEST = exports.LISTINGS_FAILURE = exports.LISTINGS_INVALIDATE = exports.LISTINGS_RECEIVE = exports.LISTINGS_REQUEST = exports.CHANGE_LOCATION = undefined;
+exports.GET_SELECTED_FAILURE = exports.GET_SELECTED_RECEIVE = exports.GET_SELECTED_REQUEST = exports.UPDATE_FAILURE = exports.UPDATE_RECEIVE = exports.UPDATE_REQUEST = exports.LISTINGS_FAILURE = exports.LISTINGS_RECEIVE = exports.LISTINGS_REQUEST = exports.LISTINGS_INVALIDATE = exports.CHANGE_LOCATION = undefined;
 exports.changeLocation = changeLocation;
 exports.invalidateListings = invalidateListings;
 exports.requestListingsAPI = requestListingsAPI;
@@ -17,19 +17,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var CHANGE_LOCATION = exports.CHANGE_LOCATION = 'CHANGE_LOCATION';
 
-var LISTINGS_REQUEST = exports.LISTINGS_REQUEST = 'LISTINGS_REQUEST';
-var LISTINGS_RECEIVE = exports.LISTINGS_RECEIVE = 'LISTINGS_RECEIVE';
-var LISTINGS_INVALIDATE = exports.LISTINGS_INVALIDATE = 'LISTINGS_INVALIDATE';
-var LISTINGS_FAILURE = exports.LISTINGS_FAILURE = 'LISTINGS_FAILURE';
-
-var UPDATE_REQUEST = exports.UPDATE_REQUEST = 'UPDATE_REQUEST';
-var UPDATE_RECEIVE = exports.UPDATE_RECEIVE = 'UPDATE_RECEIVE';
-var UPDATE_FAILURE = exports.UPDATE_FAILURE = 'UPDATE_FAILURE';
-
-var GET_SELECTED_REQUEST = exports.GET_SELECTED_REQUEST = 'GET_SELECTED_REQUEST';
-var GET_SELECTED_RECEIVE = exports.GET_SELECTED_RECEIVE = 'GET_SELECTED_RECEIVE';
-var GET_SELECTED_FAILURE = exports.GET_SELECTED_FAILURE = 'GET_SELECTED_FAILURE';
-
 function changeLocation(location) {
 	return {
 		type: CHANGE_LOCATION,
@@ -39,12 +26,18 @@ function changeLocation(location) {
 
 // FETCH LISTINGS
 // is this ever called?
+var LISTINGS_INVALIDATE = exports.LISTINGS_INVALIDATE = 'LISTINGS_INVALIDATE';
+
 function invalidateListings(location) {
 	return {
 		type: LISTINGS_INVALIDATE,
 		location: location
 	};
 }
+
+var LISTINGS_REQUEST = exports.LISTINGS_REQUEST = 'LISTINGS_REQUEST';
+var LISTINGS_RECEIVE = exports.LISTINGS_RECEIVE = 'LISTINGS_RECEIVE';
+var LISTINGS_FAILURE = exports.LISTINGS_FAILURE = 'LISTINGS_FAILURE';
 
 function requestListingsAPI(location) {
 	return _defineProperty({}, _reduxApiMiddleware.CALL_API, {
@@ -57,6 +50,10 @@ function requestListingsAPI(location) {
 // EDIT GOING... updateSelected(yelpID, user, going)
 // use CALL_API with [CALL_API].body set to the id, user, and true/false (adding/subtracting)
 // reducers should update state with the listing
+var UPDATE_REQUEST = exports.UPDATE_REQUEST = 'UPDATE_REQUEST';
+var UPDATE_RECEIVE = exports.UPDATE_RECEIVE = 'UPDATE_RECEIVE';
+var UPDATE_FAILURE = exports.UPDATE_FAILURE = 'UPDATE_FAILURE';
+
 function updateSelected(yelpID, user, going) {
 	return _defineProperty({}, _reduxApiMiddleware.CALL_API, {
 		enpoint: '/venues/' + yelpID,
@@ -66,9 +63,13 @@ function updateSelected(yelpID, user, going) {
 	});
 }
 
+var GET_SELECTED_REQUEST = exports.GET_SELECTED_REQUEST = 'GET_SELECTED_REQUEST';
+var GET_SELECTED_RECEIVE = exports.GET_SELECTED_RECEIVE = 'GET_SELECTED_RECEIVE';
+var GET_SELECTED_FAILURE = exports.GET_SELECTED_FAILURE = 'GET_SELECTED_FAILURE';
+
 function getSelectedVenues() {
 	return _defineProperty({}, _reduxApiMiddleware.CALL_API, {
-		enpoint: '/venues',
+		endpoint: '/venues',
 		method: 'GET',
 		types: [GET_SELECTED_REQUEST, GET_SELECTED_RECEIVE, GET_SELECTED_FAILURE]
 	});
@@ -458,19 +459,15 @@ var App = function (_Component) {
 			var location = _props.location;
 
 			dispatch((0, _actions.getSelectedVenues)());
-
-			// do not load anything at the outset
-			// dispatch(fetchListingsIfNeeded(selectedSubreddit))
 		}
 	}, {
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(nextProps) {
-			console.log('### Receiving props');
+			// console.log('### Receiving props for App')
 			if (nextProps.location !== this.props.location) {
 				var dispatch = nextProps.dispatch;
 				var location = nextProps.location;
 
-				console.log(' -- updating for', location);
 				dispatch((0, _actions.requestListingsAPI)(location));
 			}
 		}
@@ -539,17 +536,15 @@ App.propTypes = {
 };
 
 function mapStateToProps(state) {
-	console.log('### mapStateToProps');
-	console.log(' -- state:');
-	console.log(state);
+	// console.log('### mapStateToProps')
+	// console.log(' -- state:', state)
 	var location = state.location,
 	    listings = state.listings.items,
 	    isFetching = state.listings.isFetching,
 	    lastUpdated = state.listings.lastUpdated,
 	    user = state.user,
 	    selected = state.selected;
-	console.log(' -- props');
-	console.log(location, listings, isFetching, lastUpdated, selected);
+	// console.log(' -- props:', location, listings, isFetching, lastUpdated, selected)
 	return {
 		location: location,
 		listings: listings,
