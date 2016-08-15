@@ -3,15 +3,20 @@ import ItemContainer from '../containers/ItemContainer.js'
 
 export default class Listings extends Component {
 	render() {
+		console.log(this.props.selected);
+		const ItemContainers = this.props.listings.map((listing, i) => {
+			let going = []
+			this.props.selected.venues.map((venue) => {
+				if (venue.yelpID == listing.yelpID) {
+					going = venue.going
+				}
+			});
+			return <ItemContainer key = { i } item = { listing } going = { going } user = { this.props.user } />
+		})
+
 		return (
 			<ul>
-				{ this.props.listings.map((listing, i) => {
-					let going = 0;
-					this.props.selected.venues.map((s) => {
-						if (s.yelpID == listing.yelpID) { going += s.going }
-					})
-					return <ItemContainer key = { i } item = { listing } going = { going } user = { this.props.user } />
-				}) }
+				{ ItemContainers }
 			</ul>
 		)
 	}

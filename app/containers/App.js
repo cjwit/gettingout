@@ -6,8 +6,7 @@ import InputSubmit from '../components/InputSubmit'
 
 class App extends Component {
 	componentDidMount() {
-		const { dispatch, location } = this.props
-		dispatch(getSelectedVenues())
+		this.props.dispatch(getSelectedVenues())
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -42,7 +41,7 @@ class App extends Component {
 					<h2>Loading...</h2>
 				}
 				{ !isFetching && listings.length === 0 &&
-					<h2>Empty</h2>
+					<h2>No results found.</h2>
 				}
 				{ listings.length > 0 &&
 					<div style = {{ opacity: isFetching ? 0.5 : 1 }} >

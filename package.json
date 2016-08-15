@@ -4,6 +4,7 @@
   "description": "Find your friends by sharing your food and drink plans. Uses React, Redux, Node, MongoDB, and the Yelp API.",
   "main": "server/server.js",
   "dependencies": {
+    "body-parser": "^1.15.2",
     "compression": "^1.6.2",
     "express": "^4.14.0",
     "isomorphic-fetch": "^2.2.1",

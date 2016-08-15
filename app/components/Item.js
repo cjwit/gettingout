@@ -2,30 +2,22 @@ import React, { PropTypes, Component } from 'react'
 
 export default class Item extends Component {
 	state = {
-		going: false
+		amGoing: this.props.going.indexOf(this.props.user) !== -1
 	}
 
-	handleGoing = (e) => {
-		this.setState({ going: !this.state.going })
-		this.props.addGoing()
-	}
-
-	handleNotGoing = (e) => {
+	updateSelected = (e) => {
 		e.preventDefault();
-		this.setState({ going: !this.state.going })
-		this.props.notGoing()
+		this.props.updateSelected(this.props.item.yelpID, this.props.user, this.state.amGoing)
 	}
 
 	render() {
-		var button = this.state.going ?
-			<button className = 'btn btn-default btn-xs' onClick = { this.handleNotGoing }>I'm going</button>
-			:
-			<button className = 'btn btn-default btn-xs' onClick = { this.handleGoing }>Go!</button>
-
+		const button = <button className = 'btn btn-default btn-xs' onClick = { this.updateSelected }>
+			Go!
+		</button>
 
 		return (
 			<li>{ this.props.item.name }
-				<span className = 'going'> Going: { this.props.going } </span> { button }
+				<span className = 'going'> Going: { this.props.going.length } </span> { button }
 			</li>
 		)
 	}
@@ -33,6 +25,6 @@ export default class Item extends Component {
 
 Item.propTypes = {
 	item: PropTypes.object.isRequired,
-	going: PropTypes.number.isRequired,
+	going: PropTypes.array.isRequired,
 	user: PropTypes.string.isRequired
 }

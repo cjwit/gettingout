@@ -3,7 +3,7 @@ var Venue = require('../data/venue');
 var _ = require('underscore');
 
 var router = require('express').Router();
-router.route('/:id').post(selectVenue);
+router.route('/:id').post(updateSelected);
 router.route('/').get(getVenues);
 
 // get venues: call on initial load
@@ -17,11 +17,12 @@ function getVenues(req, res) {
 }
 
 // called if no venue exists within the same name
-function addVenue(req, res) {
-    var venue = new Venue(_.extend({}, req.body));
+function addVenue(id, user, res) {
+    var venue = new Venue(_.extend({}, { yelpID: id, going: [ user ] }));
+	console.log('addVenue called', venue)
     venue.save(function (err) {
         if (err) res.send(err);
-        else res.json(venue);
+        getVenues(null, res);
     });
 }
 
@@ -33,12 +34,38 @@ function deleteVenue(id, res) {
     });
 }
 
-function selectVenue(req, res) {
-	console.log('selectVenue called');
+function addUser(id, user) {
+
+}
+
+function removeUser(id, user) {
+	// if, after removed, venue has no guests, deleteVenue
+
+}
+
+function updateSelected(req, res) {
+	console.log('updateSelected called');
     var id = req.params.id;
-    var info = req.body;
-	console.log(' -- info'); 									// { user, going }
-	console.log(info);
+    var user = req.body.user;
+	var going = !!req.body.going;
+
+	console.log(' -- info');
+	console.log(id, user, going);
+	Venue.find((err, venues) => {
+		if (err) res.send(err);
+		console.log(venues);
+		var selectedIDs = [];
+		venues.forEach((v) => selectedIDs.push(v.yelpID))
+		if (selectedIDs.indexOf(id) == -1) {
+			console.log('about to call addVenue')
+			addVenue(id, user, res)
+		}
+		// check ids...
+		// if venue is in list, addUser or removeUser
+		// if venue does not exist, addVenue with user
+
+
+	})
 
 	// check current venues for a matching id
 	// if there is one:

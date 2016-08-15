@@ -42,11 +42,15 @@ export const UPDATE_RECEIVE = 'UPDATE_RECEIVE'
 export const UPDATE_FAILURE = 'UPDATE_FAILURE'
 
 export function updateSelected(yelpID, user, going) {
+	console.log('updateSelected called', yelpID, user, going)
+	const body = JSON.stringify({ user, going })
+	console.log(' -- body:', body)
 	return {
 		[CALL_API]: {
-			enpoint: `/venues/${yelpID}`,
+			endpoint: `/venues/${yelpID}`,
 			method: 'POST',
-			body: JSON.stringify({ user, going }),
+			headers: { 'Content-Type': 'application/json' },
+			body: body,
 			types: [ UPDATE_REQUEST, UPDATE_RECEIVE, UPDATE_FAILURE ]
 		}
 	}

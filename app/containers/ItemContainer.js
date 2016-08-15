@@ -1,15 +1,11 @@
 import { connect } from 'react-redux'
-import { addGoing, notGoing } from '../actions'
+import { updateSelected } from '../actions'
 import Item from '../components/Item'
 
 const mapDispatchToProps = (dispatch, ownProps) => {
 	return {
-		addGoing: () => {
-			dispatch(addGoing(ownProps.item.yelpID, ownProps.user))
-		},
-
-		notGoing: () => {
-			dispatch(notGoing(ownProps.item.yelpID, ownProps.user))
+		updateSelected: (yelpID, user, going) => {
+			dispatch(updateSelected(yelpID, user, going))
 		}
 	}
 }

@@ -55,10 +55,14 @@ var UPDATE_RECEIVE = exports.UPDATE_RECEIVE = 'UPDATE_RECEIVE';
 var UPDATE_FAILURE = exports.UPDATE_FAILURE = 'UPDATE_FAILURE';
 
 function updateSelected(yelpID, user, going) {
+	console.log('updateSelected called', yelpID, user, going);
+	var body = JSON.stringify({ user: user, going: going });
+	console.log(' -- body:', body);
 	return _defineProperty({}, _reduxApiMiddleware.CALL_API, {
-		enpoint: '/venues/' + yelpID,
+		endpoint: '/venues/' + yelpID,
 		method: 'POST',
-		body: JSON.stringify({ user: user, going: going }),
+		headers: { 'Content-Type': 'application/json' },
+		body: body,
 		types: [UPDATE_REQUEST, UPDATE_RECEIVE, UPDATE_FAILURE]
 	});
 }
@@ -247,27 +251,19 @@ var Item = function (_Component) {
 		}
 
 		return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Item)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
-			going: false
-		}, _this.handleGoing = function (e) {
-			_this.setState({ going: !_this.state.going });
-			_this.props.addGoing();
-		}, _this.handleNotGoing = function (e) {
+			amGoing: _this.props.going.indexOf(_this.props.user) !== -1
+		}, _this.updateSelected = function (e) {
 			e.preventDefault();
-			_this.setState({ going: !_this.state.going });
-			_this.props.notGoing();
+			_this.props.updateSelected(_this.props.item.yelpID, _this.props.user, _this.state.amGoing);
 		}, _temp), _possibleConstructorReturn(_this, _ret);
 	}
 
 	_createClass(Item, [{
 		key: 'render',
 		value: function render() {
-			var button = this.state.going ? _react2.default.createElement(
+			var button = _react2.default.createElement(
 				'button',
-				{ className: 'btn btn-default btn-xs', onClick: this.handleNotGoing },
-				'I\'m going'
-			) : _react2.default.createElement(
-				'button',
-				{ className: 'btn btn-default btn-xs', onClick: this.handleGoing },
+				{ className: 'btn btn-default btn-xs', onClick: this.updateSelected },
 				'Go!'
 			);
 
@@ -279,7 +275,7 @@ var Item = function (_Component) {
 					'span',
 					{ className: 'going' },
 					' Going: ',
-					this.props.going,
+					this.props.going.length,
 					' '
 				),
 				' ',
@@ -296,7 +292,7 @@ exports.default = Item;
 
 Item.propTypes = {
 	item: _react.PropTypes.object.isRequired,
-	going: _react.PropTypes.number.isRequired,
+	going: _react.PropTypes.array.isRequired,
 	user: _react.PropTypes.string.isRequired
 };
 
@@ -339,18 +335,21 @@ var Listings = function (_Component) {
 		value: function render() {
 			var _this2 = this;
 
+			console.log(this.props.selected);
+			var ItemContainers = this.props.listings.map(function (listing, i) {
+				var going = [];
+				_this2.props.selected.venues.map(function (venue) {
+					if (venue.yelpID == listing.yelpID) {
+						going = venue.going;
+					}
+				});
+				return _react2.default.createElement(_ItemContainer2.default, { key: i, item: listing, going: going, user: _this2.props.user });
+			});
+
 			return _react2.default.createElement(
 				'ul',
 				null,
-				this.props.listings.map(function (listing, i) {
-					var going = 0;
-					_this2.props.selected.venues.map(function (s) {
-						if (s.yelpID == listing.yelpID) {
-							going += s.going;
-						}
-					});
-					return _react2.default.createElement(_ItemContainer2.default, { key: i, item: listing, going: going, user: _this2.props.user });
-				})
+				ItemContainers
 			);
 		}
 	}]);
@@ -454,11 +453,7 @@ var App = function (_Component) {
 	_createClass(App, [{
 		key: 'componentDidMount',
 		value: function componentDidMount() {
-			var _props = this.props;
-			var dispatch = _props.dispatch;
-			var location = _props.location;
-
-			dispatch((0, _actions.getSelectedVenues)());
+			this.props.dispatch((0, _actions.getSelectedVenues)());
 		}
 	}, {
 		key: 'componentWillReceiveProps',
@@ -474,13 +469,13 @@ var App = function (_Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var _props2 = this.props;
-			var location = _props2.location;
-			var listings = _props2.listings;
-			var isFetching = _props2.isFetching;
-			var lastUpdated = _props2.lastUpdated;
-			var selected = _props2.selected;
-			var user = _props2.user;
+			var _props = this.props;
+			var location = _props.location;
+			var listings = _props.listings;
+			var isFetching = _props.isFetching;
+			var lastUpdated = _props.lastUpdated;
+			var selected = _props.selected;
+			var user = _props.user;
 
 			return _react2.default.createElement(
 				'div',
@@ -513,7 +508,7 @@ var App = function (_Component) {
 				!isFetching && listings.length === 0 && _react2.default.createElement(
 					'h2',
 					null,
-					'Empty'
+					'No results found.'
 				),
 				listings.length > 0 && _react2.default.createElement(
 					'div',
@@ -576,12 +571,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
 	return {
-		addGoing: function addGoing() {
-			dispatch((0, _actions.addGoing)(ownProps.item.yelpID, ownProps.user));
-		},
-
-		notGoing: function notGoing() {
-			dispatch((0, _actions.notGoing)(ownProps.item.yelpID, ownProps.user));
+		updateSelected: function updateSelected(yelpID, user, going) {
+			dispatch((0, _actions.updateSelected)(yelpID, user, going));
 		}
 	};
 };
