@@ -336,14 +336,15 @@ var Listings = function (_Component) {
 		value: function render() {
 			var _this2 = this;
 
-			var ItemContainers = this.props.listings.map(function (listing, i) {
+			var ItemContainers = [];
+			this.props.listings.forEach(function (listing, i) {
 				var going = [];
-				_this2.props.selected.venues.map(function (venue) {
+				_this2.props.selected.venues.forEach(function (venue) {
 					if (venue.yelpID == listing.yelpID) {
 						going = venue.going;
 					}
 				});
-				return _react2.default.createElement(_ItemContainer2.default, { key: i, item: listing, going: going, user: _this2.props.user });
+				ItemContainers.push(_react2.default.createElement(_ItemContainer2.default, { key: i, item: listing, going: going, user: _this2.props.user }));
 			});
 
 			return _react2.default.createElement(
