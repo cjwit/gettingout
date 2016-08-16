@@ -9,7 +9,7 @@ export default class GoingButton extends Component {
 	render() {
 		return (
 			<button
-				className = { this.props.amGoing ? 'btn btn-default btn-xs btn-danger' : 'btn btn-default btn-xs btn-primary' }
+				className = { this.props.amGoing ? 'btn btn-default btn-sm btn-danger' : 'btn btn-default btn-sm btn-primary' }
 				onClick = { this.updateSelected }
 				disabled = { this.props.username === '' }>
 				{ this.props.amGoing ? "I'm backing out" : "I'm going tonight" }

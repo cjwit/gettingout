@@ -20,9 +20,9 @@ export default class Listings extends Component {
 		})
 
 		return (
-			<ul>
+			<div className = 'row'>
 				{ Items }
-			</ul>
+			</div>
 		)
 	}
 }

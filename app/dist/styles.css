@@ -1,5 +1,5 @@
 .going {
-  font-size: 0.8em;
+  font-size: 1.2em;
   color: #949494; }
 
 body {
@@ -10,3 +10,17 @@ body {
   margin-right: 20px;
   color: #949494;
   display: inline-block; }
+
+.venue {
+  border: 1px solid #949494;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px; }
+  .venue h3 {
+    margin-top: 10px; }
+  .venue img {
+    float: left;
+    padding: 10px 10px 10px 0px;
+    border-radius: 5px; }
+  .venue:hover {
+    background: #ececec; }

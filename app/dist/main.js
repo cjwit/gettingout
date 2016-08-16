@@ -233,7 +233,7 @@ var GoingButton = function (_Component) {
 			return _react2.default.createElement(
 				'button',
 				{
-					className: this.props.amGoing ? 'btn btn-default btn-xs btn-danger' : 'btn btn-default btn-xs btn-primary',
+					className: this.props.amGoing ? 'btn btn-default btn-sm btn-danger' : 'btn btn-default btn-sm btn-primary',
 					onClick: this.updateSelected,
 					disabled: this.props.username === '' },
 				this.props.amGoing ? "I'm backing out" : "I'm going tonight"
@@ -427,24 +427,40 @@ var Item = function (_Component) {
 		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
-				'li',
-				null,
-				this.props.item.name,
+				'div',
+				{ className: 'col-md-6 col-sm-offset-3' },
 				_react2.default.createElement(
-					'span',
-					{ className: 'going' },
-					' Going: ',
-					this.props.going.length,
-					' '
-				),
-				' ',
-				_react2.default.createElement(_GoingButtonContainer2.default, {
-					item: this.props.item,
-					username: this.props.username,
-					amGoing: this.props.amGoing }),
-				this.props.going.map(function (user) {
-					return " " + user;
-				})
+					'div',
+					{ className: 'venue text-right' },
+					_react2.default.createElement(
+						'a',
+						{ href: this.props.item.url, target: '_blank' },
+						_react2.default.createElement('img', { className: 'img-responsive', src: this.props.item.image, alt: '...' })
+					),
+					_react2.default.createElement(
+						'h3',
+						null,
+						this.props.item.name
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						_react2.default.createElement(
+							'span',
+							{ className: 'going' },
+							'Going: ',
+							this.props.going.length
+						)
+					),
+					_react2.default.createElement(
+						'p',
+						{ className: 'text-right' },
+						_react2.default.createElement(_GoingButtonContainer2.default, {
+							item: this.props.item,
+							username: this.props.username,
+							amGoing: this.props.amGoing })
+					)
+				)
 			);
 		}
 	}]);
@@ -518,8 +534,8 @@ var Listings = function (_Component) {
 			});
 
 			return _react2.default.createElement(
-				'ul',
-				null,
+				'div',
+				{ className: 'row' },
 				Items
 			);
 		}

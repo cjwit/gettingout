@@ -4,14 +4,25 @@ import GoingButtonContainer from '../containers/GoingButtonContainer.js'
 export default class Item extends Component {
 	render() {
 		return (
-			<li>{ this.props.item.name }
-				<span className = 'going'> Going: { this.props.going.length } </span>&nbsp;
-				<GoingButtonContainer
-					item = { this.props.item }
-					username = { this.props.username }
-					amGoing = { this.props.amGoing } />
-				{ this.props.going.map((user) => " " + user ) }
-			</li>
+			<div className = 'col-md-6 col-sm-offset-3'>
+				<div className = 'venue text-right'>
+					<a href = { this.props.item.url } target = '_blank'>
+						<img className = 'img-responsive' src = { this.props.item.image } alt = '...' />
+					</a>
+					<h3>{ this.props.item.name }</h3>
+					<p>
+						<span className = 'going'>
+							 Going: { this.props.going.length }
+						</span>
+					</p>
+					<p className = 'text-right'>
+						<GoingButtonContainer
+							item = { this.props.item }
+							username = { this.props.username }
+							amGoing = { this.props.amGoing } />
+					</p>
+				</div>
+			</div>
 		)
 	}
 }
