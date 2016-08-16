@@ -25,32 +25,27 @@ class App extends Component {
 	}
 
 	handleChange = (nextLocation) => {
+		$('#moving').animate({ 'margin-top': 20 })
 		this.props.dispatch(changeLocation(nextLocation))
 	}
 
 	render() {
-		const { location, listings, isFetching, lastUpdated, selected, username, userMessage } = this.props
+		const { location, listings, isFetching, selected, username } = this.props
 		return (
 			<div>
 				<LoginContainer />
-				<h1>{ location }</h1>
-				<InputSubmit name = 'locationInput'
-						submitFunction = { this.handleChange }
-						placeholder = 'Where are you?' />
-				<p>
-					{ lastUpdated &&
-						<span>
-							Last updated at { new Date(lastUpdated).toLocaleTimeString()}.
-							{' '}
-						</span>
+				<div id = 'moving'>
+					<h1>{ location == "" ? "Where are you going tonight?" : location }</h1>
+					<InputSubmit name = 'locationInput'
+							submitFunction = { this.handleChange }
+							placeholder = 'Where are you?' />
+					{ isFetching && listings.length === 0 &&
+						<h2>Search for your location to find local hotspots. Log in to pick one for yourself.</h2>
 					}
-				</p>
-				{ isFetching && listings.length === 0 &&
-					<h2>Loading...</h2>
-				}
-				{ !isFetching && listings.length === 0 &&
-					<h2>No results found.</h2>
-				}
+					{ !isFetching && listings.length === 0 &&
+						<h2>Search for your location to find local hotspots. Log in to pick one for yourself.</h2>
+					}
+				</div>
 				{ listings.length > 0 &&
 					<div style = {{ opacity: isFetching ? 0.5 : 1 }} >
 						<Listings listings = { listings } selected = { selected } username = { username } />
@@ -65,7 +60,6 @@ App.propTypes = {
 	location: PropTypes.string.isRequired,
 	listings: PropTypes.array.isRequired,
 	isFetching: PropTypes.bool.isRequired,
-	lastUpdated: PropTypes.number.isRequired,
 	dispatch: PropTypes.func.isRequired
 }
 
@@ -75,7 +69,6 @@ function mapStateToProps(state) {
 	const location = state.location,
 		  listings = state.listings.items,
 		  isFetching = state.listings.isFetching,
-		  lastUpdated = state.listings.lastUpdated,
 		  username = state.user.username,
 		  selected = state.selected;
 	// console.log(' -- props:', location, listings, isFetching, lastUpdated, selected)
@@ -83,7 +76,6 @@ function mapStateToProps(state) {
 		location,
 		listings,
 		isFetching,
-		lastUpdated,
 		selected,
 		username
 	}

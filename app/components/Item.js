@@ -12,7 +12,10 @@ export default class Item extends Component {
 					<h3>{ this.props.item.name }</h3>
 					<p>
 						<span className = 'going'>
-							 Going: { this.props.going.length }
+							 Going: { this.props.going.length }&nbsp;
+							 <small>
+								 { this.props.going.map((username) => " " + username )}
+							 </small>
 						</span>
 					</p>
 					<p className = 'text-right'>

@@ -449,7 +449,15 @@ var Item = function (_Component) {
 							'span',
 							{ className: 'going' },
 							'Going: ',
-							this.props.going.length
+							this.props.going.length,
+							' ',
+							_react2.default.createElement(
+								'small',
+								null,
+								this.props.going.map(function (username) {
+									return " " + username;
+								})
+							)
 						)
 					),
 					_react2.default.createElement(
@@ -847,6 +855,7 @@ var App = function (_Component) {
 		}
 
 		return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(App)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.handleChange = function (nextLocation) {
+			$('#moving').animate({ 'margin-top': 20 });
 			_this.props.dispatch((0, _actions.changeLocation)(nextLocation));
 		}, _temp), _possibleConstructorReturn(_this, _ret);
 	}
@@ -875,44 +884,34 @@ var App = function (_Component) {
 			var location = _props.location;
 			var listings = _props.listings;
 			var isFetching = _props.isFetching;
-			var lastUpdated = _props.lastUpdated;
 			var selected = _props.selected;
 			var username = _props.username;
-			var userMessage = _props.userMessage;
 
 			return _react2.default.createElement(
 				'div',
 				null,
 				_react2.default.createElement(_LoginContainer2.default, null),
 				_react2.default.createElement(
-					'h1',
-					null,
-					location
-				),
-				_react2.default.createElement(_InputSubmit2.default, { name: 'locationInput',
-					submitFunction: this.handleChange,
-					placeholder: 'Where are you?' }),
-				_react2.default.createElement(
-					'p',
-					null,
-					lastUpdated && _react2.default.createElement(
-						'span',
+					'div',
+					{ id: 'moving' },
+					_react2.default.createElement(
+						'h1',
 						null,
-						'Last updated at ',
-						new Date(lastUpdated).toLocaleTimeString(),
-						'.',
-						' '
+						location == "" ? "Where are you going tonight?" : location
+					),
+					_react2.default.createElement(_InputSubmit2.default, { name: 'locationInput',
+						submitFunction: this.handleChange,
+						placeholder: 'Where are you?' }),
+					isFetching && listings.length === 0 && _react2.default.createElement(
+						'h2',
+						null,
+						'Search for your location to find local hotspots. Log in to pick one for yourself.'
+					),
+					!isFetching && listings.length === 0 && _react2.default.createElement(
+						'h2',
+						null,
+						'Search for your location to find local hotspots. Log in to pick one for yourself.'
 					)
-				),
-				isFetching && listings.length === 0 && _react2.default.createElement(
-					'h2',
-					null,
-					'Loading...'
-				),
-				!isFetching && listings.length === 0 && _react2.default.createElement(
-					'h2',
-					null,
-					'No results found.'
 				),
 				listings.length > 0 && _react2.default.createElement(
 					'div',
@@ -930,7 +929,6 @@ App.propTypes = {
 	location: _react.PropTypes.string.isRequired,
 	listings: _react.PropTypes.array.isRequired,
 	isFetching: _react.PropTypes.bool.isRequired,
-	lastUpdated: _react.PropTypes.number.isRequired,
 	dispatch: _react.PropTypes.func.isRequired
 };
 
@@ -940,7 +938,6 @@ function mapStateToProps(state) {
 	var location = state.location,
 	    listings = state.listings.items,
 	    isFetching = state.listings.isFetching,
-	    lastUpdated = state.listings.lastUpdated,
 	    username = state.user.username,
 	    selected = state.selected;
 	// console.log(' -- props:', location, listings, isFetching, lastUpdated, selected)
@@ -948,7 +945,6 @@ function mapStateToProps(state) {
 		location: location,
 		listings: listings,
 		isFetching: isFetching,
-		lastUpdated: lastUpdated,
 		selected: selected,
 		username: username
 	};
