@@ -10,7 +10,8 @@ export default class GoingButton extends Component {
 		return (
 			<button
 				className = { this.props.amGoing ? 'btn btn-default btn-xs btn-danger' : 'btn btn-default btn-xs btn-primary' }
-				onClick = { this.updateSelected }>
+				onClick = { this.updateSelected }
+				disabled = { this.props.username === '' }>
 				{ this.props.amGoing ? "I'm backing out" : "I'm going tonight" }
 			</button>
 		)

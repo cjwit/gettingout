@@ -15,7 +15,7 @@ export default class Listings extends Component {
 				key = { i }
 				item = { listing }
 				going = { going }
-				amGoing = { going.indexOf(this.props.user) !== -1 }
+				amGoing = { going.indexOf(this.props.username) !== -1 }
 				username = { this.props.username } />)
 		})
 

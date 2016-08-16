@@ -234,7 +234,8 @@ var GoingButton = function (_Component) {
 				'button',
 				{
 					className: this.props.amGoing ? 'btn btn-default btn-xs btn-danger' : 'btn btn-default btn-xs btn-primary',
-					onClick: this.updateSelected },
+					onClick: this.updateSelected,
+					disabled: this.props.username === '' },
 				this.props.amGoing ? "I'm backing out" : "I'm going tonight"
 			);
 		}
@@ -440,7 +441,10 @@ var Item = function (_Component) {
 				_react2.default.createElement(_GoingButtonContainer2.default, {
 					item: this.props.item,
 					username: this.props.username,
-					amGoing: this.props.amGoing })
+					amGoing: this.props.amGoing }),
+				this.props.going.map(function (user) {
+					return " " + user;
+				})
 			);
 		}
 	}]);
@@ -509,7 +513,7 @@ var Listings = function (_Component) {
 					key: i,
 					item: listing,
 					going: going,
-					amGoing: going.indexOf(_this2.props.user) !== -1,
+					amGoing: going.indexOf(_this2.props.username) !== -1,
 					username: _this2.props.username }));
 			});
 

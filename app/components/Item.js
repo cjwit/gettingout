@@ -10,6 +10,7 @@ export default class Item extends Component {
 					item = { this.props.item }
 					username = { this.props.username }
 					amGoing = { this.props.amGoing } />
+				{ this.props.going.map((user) => " " + user ) }
 			</li>
 		)
 	}
