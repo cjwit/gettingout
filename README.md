@@ -1,9 +1,5 @@
 # Getting Out
 
-* Send selected to server and fetch it along with listings
-* Change Go button to cancel, subtract from going (use state to determine onClick function)
-* Check date for refresh to determine if it invalidated || remove INVALIDATE_LISTINGS
+Find where people are heading tonight. Using the Yelp API and built on React and Redux with a Node/MongoDB backend, this application locates local bars and allows users who sign in to list themselves as going for the evening. It shows usernames, making it easy to see where your friends are headed.
 
-* Change selected to array of usernames
-
-Or drop the location action entirely and just call the fetch directly from the input
+See the [live demo](https://cjwit-gettingout.herokuapp.com)!
