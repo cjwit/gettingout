@@ -25,20 +25,20 @@ export default class LoginForm extends Component {
 	createAccount = (e) => {
 		e.preventDefault();
 		const user = this.state;
-		console.log('clicked createAccount, state:', user)
+		this.setState({ username: '', password: '' })
 		this.props.register(user);
 	}
 
 	clickLogin = (e) => {
 		e.preventDefault();
 		const user = this.state;
-		console.log('clicked login, state:', user)
+		this.setState({ username: '', password: '' })
 		this.props.login(user);
 	}
 
 	clickLogout = (e) => {
 		e.preventDefault();
-		console.log('clicked logout')
+		this.setState({ username: '', password: '' })
 		this.props.logout();
 	}
 
@@ -70,14 +70,15 @@ export default class LoginForm extends Component {
 
     render() {
 		// add error message support
-		const err = this.props.message !== '' ?
+		const err = this.props.userMessage !== null ?
 			<ErrorMessage message = { this.props.userMessage } /> : null
 
 		return (
 			<div className="container">
-				<div className = { this.props.username == '' ? 'hidden' : 'row form-group' } id="loggedIn">
+				<div className = { this.props.username == '' ? 'hidden' : 'row form-group text-right' } id="loggedIn">
+					<p className = 'loginInfo'>Logged in as { this.props.username } </p>
 					<button className = 'btn btn-primary pull-right' onClick = { this.clickLogout }>
-						{ this.props.username } Logout
+						Logout
 					</button>
 				</div>
 				<div className = { this.props.username == '' ? 'row form-group' : 'hidden' } id="default">

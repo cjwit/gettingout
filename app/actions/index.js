@@ -101,7 +101,7 @@ export const LOGOUT_FAILURE = 'LOGOUT_FAILURE'
 export function logout() {
 	return {
 		[CALL_API]: {
-			endpoint: `/login`,
+			endpoint: `/logout`,
 			method: 'GET',
 			types: [ LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE ]
 		}

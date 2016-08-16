@@ -46,7 +46,13 @@ function user(state, action) {
 		case LOGIN_FAILURE:
 		case REGISTER_USER_FAILURE:
 		case LOGOUT_FAILURE:
-			return state
+			let errorMessage;
+			if (action.payload.status == 401) {
+				errorMessage = 'Authorization failed'
+			} else {
+				errorMessage = action.payload.statusText
+			}
+			return Object.assign({}, state, { isFetching: false, message: errorMessage })
 	}
 }
 

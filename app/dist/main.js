@@ -109,7 +109,7 @@ var LOGOUT_FAILURE = exports.LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 
 function logout() {
 	return _defineProperty({}, _reduxApiMiddleware.CALL_API, {
-		endpoint: '/login',
+		endpoint: '/logout',
 		method: 'GET',
 		types: [LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE]
 	});
@@ -578,16 +578,16 @@ var LoginForm = function (_Component) {
 		}, _this.createAccount = function (e) {
 			e.preventDefault();
 			var user = _this.state;
-			console.log('clicked createAccount, state:', user);
+			_this.setState({ username: '', password: '' });
 			_this.props.register(user);
 		}, _this.clickLogin = function (e) {
 			e.preventDefault();
 			var user = _this.state;
-			console.log('clicked login, state:', user);
+			_this.setState({ username: '', password: '' });
 			_this.props.login(user);
 		}, _this.clickLogout = function (e) {
 			e.preventDefault();
-			console.log('clicked logout');
+			_this.setState({ username: '', password: '' });
 			_this.props.logout();
 		}, _this.handleInputChange = function (e) {
 			e.preventDefault();
@@ -639,19 +639,25 @@ var LoginForm = function (_Component) {
 		key: 'render',
 		value: function render() {
 			// add error message support
-			var err = this.props.message !== '' ? _react2.default.createElement(_ErrorMessage2.default, { message: this.props.userMessage }) : null;
+			var err = this.props.userMessage !== null ? _react2.default.createElement(_ErrorMessage2.default, { message: this.props.userMessage }) : null;
 
 			return _react2.default.createElement(
 				'div',
 				{ className: 'container' },
 				_react2.default.createElement(
 					'div',
-					{ className: this.props.username == '' ? 'hidden' : 'row form-group', id: 'loggedIn' },
+					{ className: this.props.username == '' ? 'hidden' : 'row form-group text-right', id: 'loggedIn' },
+					_react2.default.createElement(
+						'p',
+						{ className: 'loginInfo' },
+						'Logged in as ',
+						this.props.username,
+						' '
+					),
 					_react2.default.createElement(
 						'button',
 						{ className: 'btn btn-primary pull-right', onClick: this.clickLogout },
-						this.props.username,
-						' Logout'
+						'Logout'
 					)
 				),
 				_react2.default.createElement(
@@ -1150,7 +1156,13 @@ function user(state, action) {
 		case _actions.LOGIN_FAILURE:
 		case _actions.REGISTER_USER_FAILURE:
 		case _actions.LOGOUT_FAILURE:
-			return state;
+			var errorMessage = void 0;
+			if (action.payload.status == 401) {
+				errorMessage = 'Authorization failed';
+			} else {
+				errorMessage = action.payload.statusText;
+			}
+			return Object.assign({}, state, { isFetching: false, message: errorMessage });
 	}
 }
 

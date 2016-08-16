@@ -4,3 +4,9 @@
 
 body {
   margin-top: 20px; }
+
+.loginInfo {
+  margin-top: 5px;
+  margin-right: 20px;
+  color: #949494;
+  display: inline-block; }

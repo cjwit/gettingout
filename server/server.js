@@ -55,11 +55,7 @@ app.post('/register', function(req, res) {
 app.get('/auth', function(req, res) {
 	console.log('checking login status')
 	const result = { username: '', message: null }
-	if (!req.user) {
-		console.log('  -- not logged in\n');
-		result.message = 'Not logged in'
-	}
-	else {
+	if (req.user) {
 		console.log('  -- user:', req.user.username, '\n');
 		result.username = user.username
 	}
@@ -86,11 +82,7 @@ app.post('/login',
 app.get('/logout', function(req, res) {
 	console.log('logged out\n');
 	req.logout();
-	const result = { username: '', message: null }
-	if (err) {
-		console.log('  -- logout failed\n');
-		result.message = 'Logout failed'
-	}
+	const result = { username: '', message: 'Logged out' }
 	res.send(result);
 });
 
