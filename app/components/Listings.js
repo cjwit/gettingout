@@ -8,7 +8,12 @@ export default class Listings extends Component {
 			let going = []
 			this.props.selected.venues.forEach((venue) => {
 				if (venue.yelpID == listing.yelpID) {
-					going = venue.going
+					venue.going.forEach((g) => {
+						const today = new Date(Date.now()).toDateString();
+						if (new Date(g.date).toDateString() == today) {
+							going.push(g.username)
+						}
+					})
 				}
 			});
 			Items.push(<Item

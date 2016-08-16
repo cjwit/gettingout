@@ -18,7 +18,7 @@ function getVenues(req, res) {
 
 // called if no venue exists within the same name
 function addVenue(id, user, res) {
-    var venue = new Venue(_.extend({}, { yelpID: id, going: [ user ] }));
+    var venue = new Venue(_.extend({}, { yelpID: id, going: [ { username: user, date: Date.now() }] }));
     venue.save(function (err) {
         if (err) res.send(err);
         getVenues(null, res);
@@ -35,16 +35,15 @@ function deleteVenue(id, res) {
 
 function addUser(id, current, user, res) {
 	const query = { yelpID: id }
-	const update = { $set: { going: current.concat(user) }}
+	const update = { $set: { going: current.concat({ username: user, date: Date.now() }) }}
 	Venue.update(query, update, (err) => {
 		if (err) res.send(err);
 		getVenues(null, res)
 	})
 }
 
-function removeUser(id, current, user, res) {
+function removeUser(id, current, index, res) {
 	const query = { yelpID: id }
-	const index = current.indexOf(user)
 	current.splice(index, 1)
 	if (current.length === 0) {
 		Venue.remove(query, (err) => {
@@ -82,10 +81,19 @@ function updateSelected(req, res) {
 
 		// found a venue with this id, call function to update it
 		} else {
-			if (currentGoingArray.indexOf(user) == -1) {
+			var userIsGoing = false;
+			var index;
+			var today = new Date(Date.now()).toDateString();
+			currentGoingArray.forEach((s, i) => {
+				if (s.username == user && new Date(s.date).toDateString() == today) {
+					userIsGoing = true;
+					index = i;
+				}
+			})
+			if (!userIsGoing) {
 				addUser(id, currentGoingArray, user, res);
 			} else {
-				removeUser(id, currentGoingArray, user, res);
+				removeUser(id, currentGoingArray, index, res);
 			}
 		}
 	})

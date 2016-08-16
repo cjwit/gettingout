@@ -40,10 +40,10 @@ class App extends Component {
 							submitFunction = { this.handleChange }
 							placeholder = 'Where are you?' />
 					{ isFetching && listings.length === 0 &&
-						<h2>Search for your location to find local hotspots. Log in to pick one for yourself.</h2>
+						<h2>Search for local hotspots using yelp. Log in to pick one for yourself.</h2>
 					}
 					{ !isFetching && listings.length === 0 &&
-						<h2>Search for your location to find local hotspots. Log in to pick one for yourself.</h2>
+						<h2>Search for local hotspots using yelp. Log in to pick one for yourself.</h2>
 					}
 				</div>
 				{ listings.length > 0 &&

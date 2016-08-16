@@ -530,7 +530,12 @@ var Listings = function (_Component) {
 				var going = [];
 				_this2.props.selected.venues.forEach(function (venue) {
 					if (venue.yelpID == listing.yelpID) {
-						going = venue.going;
+						venue.going.forEach(function (g) {
+							var today = new Date(Date.now()).toDateString();
+							if (new Date(g.date).toDateString() == today) {
+								going.push(g.username);
+							}
+						});
 					}
 				});
 				Items.push(_react2.default.createElement(_Item2.default, {
@@ -905,12 +910,12 @@ var App = function (_Component) {
 					isFetching && listings.length === 0 && _react2.default.createElement(
 						'h2',
 						null,
-						'Search for your location to find local hotspots. Log in to pick one for yourself.'
+						'Search for local hotspots using yelp. Log in to pick one for yourself.'
 					),
 					!isFetching && listings.length === 0 && _react2.default.createElement(
 						'h2',
 						null,
-						'Search for your location to find local hotspots. Log in to pick one for yourself.'
+						'Search for local hotspots using yelp. Log in to pick one for yourself.'
 					)
 				),
 				listings.length > 0 && _react2.default.createElement(
