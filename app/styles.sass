@@ -1,5 +1,7 @@
 $grey: rgb(148, 148, 148)
 $lightgrey: rgb(236, 236, 236)
+$text: rgb(103, 12, 97)
+$small: 768px
 
 .going
   font-size: 1.2em
@@ -8,15 +10,37 @@ $lightgrey: rgb(236, 236, 236)
 body
   margin-top: 20px
   margin-bottom: 50px
+  background: url(drinks.jpg)
+  color: $text
+
+  @media screen and (max-width: $small)
+    background-attachment: scroll
+  
+  @media screen and (min-width: $small)
+    background-attachment: fixed
+    background-size: cover
+
+h1, h2
+  background: $lightgrey
+  display: inline-block
+  padding: 5px
+
+h2
+  margin-top: 0px
 
 #moving
-  margin-top: 40vh
+  @media screen and (max-width: $small)
+    margin-top: 20vh
+  @media screen and (min-width: $small)
+    margin-top: 40vh
 
 .loginInfo
-  margin-top: 5px
+  margin-top: 2px
   margin-right: 20px
   color: $grey
   display: inline-block
+  background: $lightgrey
+  padding: 5px
 
 .venue
   border: 1px solid $grey
@@ -24,6 +48,7 @@ body
   margin: 10px
   border-radius: 5px
   font-weight: 200
+  background: white
 
   h3
     margin-top: 10px

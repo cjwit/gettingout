@@ -4,23 +4,48 @@
 
 body {
   margin-top: 20px;
-  margin-bottom: 50px; }
+  margin-bottom: 50px;
+  background: url(drinks.jpg);
+  color: #670c61; }
+  @media screen and (max-width: 768px) {
+    body {
+      background-attachment: scroll; } }
+  @media screen and (min-width: 768px) {
+    body {
+      background-attachment: fixed;
+      background-size: cover; } }
 
-#moving {
-  margin-top: 40vh; }
+h1, h2 {
+  background: #ececec;
+  display: inline-block;
+  padding: 5px; }
+
+h2 {
+  margin-top: 0px; }
+
+@media screen and (max-width: 768px) {
+  #moving {
+    margin-top: 20vh; } }
+
+@media screen and (min-width: 768px) {
+  #moving {
+    margin-top: 40vh; } }
 
 .loginInfo {
-  margin-top: 5px;
+  margin-top: 2px;
   margin-right: 20px;
   color: #949494;
-  display: inline-block; }
+  display: inline-block;
+  background: #ececec;
+  padding: 5px; }
 
 .venue {
   border: 1px solid #949494;
   padding: 10px;
   margin: 10px;
   border-radius: 5px;
-  font-weight: 200; }
+  font-weight: 200;
+  background: white; }
   .venue h3 {
     margin-top: 10px; }
   .venue img {
