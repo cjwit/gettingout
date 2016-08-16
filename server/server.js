@@ -13,7 +13,15 @@ app.use(compress());
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
-// login
+// controllers
+var yelpController = require('./controllers/yelpController');
+var venueController = require('./controllers/venueController');
+var userController = require('./controllers/userController');
+app.use('/yelp', yelpController);
+app.use('/venues', venueController);
+app.use("/user", userController);
+
+// passport config
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var cookieParser = require('cookie-parser');
@@ -27,15 +35,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, "../app/dist")));
 
-// controllers
-var yelpController = require('./controllers/yelpController');
-var venueController = require('./controllers/venueController');
-var userController = require('./controllers/userController');
-app.use('/yelp', yelpController);
-app.use('/venues', venueController);
-app.use("/user", userController);
-
-// passport config
 var User = require('./data/user.js');
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
@@ -66,7 +65,7 @@ app.post('/login',
 	passport.authenticate('local'),
 	function(req, res) {
 		console.log('login called');
-		console.log('  -- user from authenticate:', req.user.username, '\n');
+		console.log('  -- user from authenticate:', req.user.username);
 		const result = { username: '', message: null }
 		if (!req.user) {
 			console.log('  -- not logged in\n');
@@ -86,7 +85,7 @@ app.get('/logout', function(req, res) {
 	res.send(result);
 });
 
-// setup app
+// return static
 app.get('/*', function(req, res) {
     res.sendFile(path.join(__dirname, '../app/dist/index.html'));
 })
