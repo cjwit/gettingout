@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-// import ErrorMessage from './ErrorMessage.js';
+import ErrorMessage from './ErrorMessage.js';
 
 export default class LoginForm extends Component {
 	state = {
@@ -12,14 +12,14 @@ export default class LoginForm extends Component {
 		$('#createAccountSubmit').prop('disabled', true);
 	}
 
-	openSigninForm() {
-		$("#createAccountForm").addClass('hidden');
-		$("#signinForm").removeClass('hidden');
+	openForm() {
+		$("#loginForm").removeClass('hidden');
+		$("#default").addClass('hidden');
 	}
 
-	openCreateAccountForm() {
-		$("#signinForm").addClass('hidden');
-		$("#createAccountForm").removeClass('hidden');
+	closeForm() {
+		$("#loginForm").addClass('hidden');
+		$("#default").removeClass('hidden');
 	}
 
 	createAccount = (e) => {
@@ -34,6 +34,12 @@ export default class LoginForm extends Component {
 		const user = this.state;
 		console.log('clicked login, state:', user)
 		this.props.login(user);
+	}
+
+	clickLogout = (e) => {
+		e.preventDefault();
+		console.log('clicked logout')
+		this.props.logout();
 	}
 
 	handleInputChange = (e) => {
@@ -64,69 +70,51 @@ export default class LoginForm extends Component {
 
     render() {
 		// add error message support
-		let err = null;
-		/*
-		if (this.props.user.error !== null) {
-			err = <ErrorMessage message = { this.props.user.error } />
-		}
-		*/
+		const err = this.props.message !== '' ?
+			<ErrorMessage message = { this.props.userMessage } /> : null
 
 		return (
 			<div className="container">
-		        <div className="row">
-					User: { this.props.username }, Message: { this.props.userMessage } { this.props.userFetching ? ', Fetching' : ', Done' }
-					<div className="col-sm-12 text-center">
-						<div className="btn-group" role="group" aria-label="...">
-							<button type="button" id="signinSelector" className="btn btn-default" onClick={ this.openSigninForm }>Sign In</button>
-							<button type="button" id="createAccountSelector" className="btn btn-default" onClick={ this.openCreateAccountForm }>Create Account</button>
+				<div className = { this.props.username == '' ? 'hidden' : 'row form-group' } id="loggedIn">
+					<button className = 'btn btn-primary pull-right' onClick = { this.clickLogout }>
+						{ this.props.username } Logout
+					</button>
+				</div>
+				<div className = { this.props.username == '' ? 'row form-group' : 'hidden' } id="default">
+					<button className = 'btn btn-primary pull-right' onClick = { this.openForm }>
+						Log in or create an account
+					</button>
+				</div>
+				<div className= { this.props.username == '' ? 'row hidden form-group' : 'hidden' } id="loginForm">
+		            <div id="usernameField" className="col-md-4">
+	                    <div className="form-group">
+	                        <input type="text"
+								   className="form-control"
+								   id="username"
+								   name="username"
+								   placeholder = "Username"
+								   value = { this.state.username }
+								   onChange = { this.handleInputChange } />
+	                    </div>
+					</div>
+					<div id="passwordField" className="col-md-4">
+						<div className="form-group">
+							<input type="password"
+								   className="form-control"
+								   id="password"
+								   placeholder = "Password"
+								   name="password"
+								   value = { this.state.password }
+								   onChange = { this.handleInputChange } />
 						</div>
 					</div>
-		            <div id="signinForm" className="col-sm-6 col-sm-offset-3 loginForm">
-		                <form onSubmit= { this.clickLogin } >
-		                    <div className="form-group">
-		                        <label htmlFor="username">Username:</label>
-		                        <input type="text"
-									   className="form-control"
-									   id="username"
-									   name="username"
-									   value = { this.state.username }
-									   onChange = { this.handleInputChange } />
-		                    </div>
-							<div className="form-group">
-		                        <label htmlFor="password">Password:</label>
-								<input type="password"
-									   className="form-control"
-									   id="password"
-									   name="password"
-									   value = { this.state.password }
-									   onChange = { this.handleInputChange } />
-		                    </div>
-		                    <button id = "loginSubmit" type="submit" className="btn btn-default">Login</button>
-		                </form>
-		            </div>
-		            <div id="createAccountForm" className="col-sm-6 col-sm-offset-3 hidden loginForm">
-		                <form onSubmit = { this.createAccount }>
-							<div className="form-group">
-		                        <label htmlFor="username">Username:</label>
-		                        <input type="text"
-									   className="form-control"
-									   id="username"
-									   name="username"
-									   value = { this.state.username }
-									   onChange = { this.handleInputChange } />
-		                    </div>
-							<div className="form-group">
-		                        <label htmlFor="password">Password:</label>
-								<input type="password"
-									   className="form-control"
-									   id="password"
-									   name="password"
-									   value = { this.state.password }
-									   onChange = { this.handleInputChange } />
-		                    </div>
-							<button id = "createAccountSubmit" type="submit" className="btn btn-default">Create Account</button>
-		                </form>
-		            </div>
+					<div id="loginButtons" className="col-md-4">
+						<div className="btn-group">
+							<button id = "loginSubmit" onClick = { this.clickLogin} className="btn btn-default">Login</button>
+							<button id = "createAccountSubmit" onClick = { this.createAccount } className="btn btn-default">Create Account</button>
+							<button className = 'btn btn-default' onClick = { this.closeForm }>Cancel</button>
+						</div>
+					</div>
 		        </div>
 				{ err }
 		    </div>
